@@ -21,6 +21,13 @@
 							</div>
 						</div>
 
+						<label for="">Kode Barang</label>
+						<div class="form-group">
+							<div class="form-line">
+								<input type="text" name="code_barang" class="form-control" />
+							</div>
+						</div>
+
 
 
 						<input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
@@ -33,13 +40,16 @@
 					<?php
 
 					if (isset($_POST['simpan'])) {
+
+						$kode_barang = $_POST['code_barang'];
+						// var_dump($kode_barang);
 						$jenis_barang = $_POST['jenis_barang'];
 
 
 
 
 
-						$sql = $koneksi->query("insert into jenis_barang (jenis_barang) values('$jenis_barang')");
+						$sql = $koneksi->query("insert into jenis_barang (jenis_barang,code_barang) values('$jenis_barang', '$kode_barang')");
 
 						if ($sql) {
 							?>

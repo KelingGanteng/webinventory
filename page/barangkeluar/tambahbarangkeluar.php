@@ -10,12 +10,15 @@
 </script>
 
 <?php
-
-
 $koneksi = new mysqli("localhost", "root", "", "webinventory");
 $no = mysqli_query($koneksi, "select id_transaksi from barang_keluar order by id_transaksi desc");
-$idtran = mysqli_fetch_array($no);
-$kode = $idtran['id_transaksi'];
+if (mysqli_num_rows($no) > 0) {
+	$idtran = mysqli_fetch_array($no);
+	$kode = $idtran['id_transaksi'];
+} else {
+	$kode = "TRK-" . date("m") . date("y") . "001";
+}
+
 
 
 $urut = substr($kode, 8, 3);
@@ -74,109 +77,134 @@ $tanggal_keluar = date("Y-m-d");
 						</div>
 
 
+
+
+
+
 						<label for="">Barang</label>
-						<div class="form-group">
-							<div class="form-line">
-								<select name="barang" id="cmb_barang" class="form-control" />
-								<option value="">-- Pilih Barang --</option>
-								<?php
-
-								$sql = $koneksi->query("select * from gudang order by kode_barang");
-								while ($data = $sql->fetch_assoc()) {
-									echo "<option value='$data[kode_barang].$data[nama_barang]'>$data[kode_barang] | $data[nama_barang]</option>";
-								}
-								?>
-
-								</select>
-
-
-							</div>
-						</div>
-						<div class="tampung"></div>
-
-						<label for="">Jumlah</label>
-						<div class="form-group">
-							<div class="form-line">
-								<input type="text" name="jumlahkeluar" id="jumlahkeluar" onkeyup="sum()"
-									class="form-control" />
+						<select name="barang" id="cmb_barang" class="form-control">
+							<option value="">-- Pilih Barang --</option>
+							<?php
+							$sql = $koneksi->query("SELECT * FROM gudang ORDER BY kode_barang");
+							while ($data = $sql->fetch_assoc()) {
+								echo "<option vaglue='" . $data['kode_barang'] . "'>" . $data['kode_barang'] . " | " . $data['nama_barang'] . "</option>";
+							}
+							?>
+						</select>
 
 
 
-							</div>
-						</div>
-
-						<label for="total">Total Stok</label>
-						<div class="form-group">
-							<div class="form-line">
-								<input readonly="readonly" name="total" id="total" type="number" class="form-control">
+						</select>
 
 
-							</div>
-						</div>
+				</div>
+			</div>
+			<div class="tampung"></div>
 
-						<div class="tampung1"></div>
-
-						<label for="">Tujuan</label>
-						<div class="form-group">
-							<div class="form-line">
-								<input type="text" name="tujuan" class="form-control" />
-							</div>
-						</div>
+			<label for="">Jumlah</label>
+			<div class="form-group">
+				<div class="form-line">
+					<input type="text" name="jumlahkeluar" id="jumlahkeluar" onkeyup="sum()" class="form-control" />
 
 
 
-						<input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
-
-					</form>
 
 
+
+
+
+				</div>
+			</div>
+
+			<label for="total">Total Stok</label>
+			<div class="form-group">
+				<div class="form-line">
+					<input readonly="readonly" name="total" id="total" type="number" class="form-control">
+
+
+				</div>
+			</div>
+
+			<div class="tampung1"></div>
+
+			<label for="">Tujuan</label>
+			<div class="form-group">
+				<div class="form-line">
+					<input type="text" name="tujuan" class="form-control" />
+				</div>
+			</div>
+
+
+
+			<input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
+
+			</form>
+
+
+
+			<?php
+
+			if (isset($_POST['simpan'])) {
+				$id_transaksi = $_POST['id_transaksi'];
+				$tanggal = $_POST['tanggal_keluar'];
+
+				$barang = $_POST['barang'];
+				$pecah_barang = explode(".", $barang);
+				$kode_barang = $pecah_barang[0];
+				$nama_barang = $pecah_barang[1];
+				$jumlah = $_POST['jumlahkeluar'];
+
+				$satuan = $_POST['satuan'];
+				$tujuan = $_POST['tujuan'];
+
+
+				$total = $_POST['total'];
+				$sisa2 = $total;
+				if ($sisa2 < 0) {
+					?>
+
+					<script type="text/javascript">
+						alert("Stok Barang Habis, Transaksi Tidak Dapat Dilakukan");
+						window.location.href = "?page=barangkeluar&aksi=tambahbarangkeluar";
+					</script>
 
 					<?php
-
-					if (isset($_POST['simpan'])) {
-						$id_transaksi = $_POST['id_transaksi'];
-						$tanggal = $_POST['tanggal_keluar'];
-
-						$barang = $_POST['barang'];
-						$pecah_barang = explode(".", $barang);
-						$kode_barang = $pecah_barang[0];
-						$nama_barang = $pecah_barang[1];
-						$jumlah = $_POST['jumlahkeluar'];
-
-						$satuan = $_POST['satuan'];
-						$tujuan = $_POST['tujuan'];
-
-
-						$total = $_POST['total'];
-						$sisa2 = $total;
-						if ($sisa2 < 0) {
-							?>
-
-							<script type="text/javascript">
-								alert("Stok Barang Habis, Transaksi Tidak Dapat Dilakukan");
-								window.location.href = "?page=barangkeluar&aksi=tambahbarangkeluar";
-							</script>
-
-							<?php
-						} else {
-
-
-							$sql = $koneksi->query("insert into barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, total, satuan, tujuan) values('$id_transaksi','$tanggal','$kode_barang','$nama_barang','$jumlah','$total','$satuan','$tujuan')");
-							$sql2 = $koneksi->query("update gudang set jumlah=(jumlah) where kode_barang='$kode_barang'");
-							?>
+				} else {
 
 
 
+					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, total, satuan, tujuan) 
+							VALUES ('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$total', '$satuan', '$tujuan')");
 
 
-							<script type="text/javascript">
-								alert("Simpan Data Berhasil");
-								window.location.href = "?page=barangkeluar";
 
-							</script>
-							<?php
-						}
+					if (!$sql) {
+						echo "Error: " . $koneksi->error;
+					} else {
+						echo "Data berhasil disimpan!";
 					}
 
 
+
+
+
+					$sql2 = $koneksi->query("UPDATE gudang SET jumlah = jumlah - '$jumlah' WHERE kode_barang = '$kode_barang'");
+
+
 					?>
+
+
+
+
+
+					<script type="text/javascript">
+						alert("Simpan Data Berhasil");
+						window.location.href = "?page=barangkeluar";
+
+					</script>
+					<?php
+				}
+			}
+
+
+			?>

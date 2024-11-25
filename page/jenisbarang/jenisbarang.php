@@ -18,6 +18,7 @@
           <thead>
             <tr>
               <th>No</th>
+              <th>Kode Barang</th>
               <th>Jenis Barang</th>
               <th>Pengaturan</th> <!-- Tambah kolom aksi -->
             </tr>
@@ -30,6 +31,7 @@
               ?>
               <tr>
                 <td><?php echo $no++; ?></td>
+                <td><?php echo htmlspecialchars($data['code_barang']); ?></td>
                 <td><?php echo htmlspecialchars($data['jenis_barang']); ?></td>
                 <td>
                   <!-- Tambah tombol edit & hapus -->

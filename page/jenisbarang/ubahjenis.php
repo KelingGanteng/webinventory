@@ -1,6 +1,5 @@
 <?php
 
-
 // Cek koneksi
 if (!isset($koneksi)) {
     die("Koneksi database tidak tersedia!");
@@ -48,6 +47,14 @@ if (!$data) {
             <div class="table-responsive">
                 <div class="body">
                     <form method="POST">
+                        <label for="code_barang">Kode Barang</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" name="code_barang" id="code_barang"
+                                    value="<?php echo htmlspecialchars($data['code_barang']); ?>" class="form-control"
+                                    required />
+                            </div>
+                        </div>
                         <label for="jenis_barang">Jenis Barang</label>
                         <div class="form-group">
                             <div class="form-line">
@@ -63,6 +70,7 @@ if (!$data) {
 
                     <?php
                     if (isset($_POST['simpan'])) {
+                        $code_barang = mysqli_real_escape_string($koneksi, $_POST['code_barang']);
                         $jenis_barang = mysqli_real_escape_string($koneksi, $_POST['jenis_barang']);
 
                         // Debug data yang akan diupdate
@@ -71,8 +79,8 @@ if (!$data) {
                         echo "\nJenis Barang: $jenis_barang";
                         echo "</pre>";
 
-                        $update = $koneksi->prepare("UPDATE jenis_barang SET jenis_barang = ? WHERE id = ?");
-                        $update->bind_param("si", $jenis_barang, $id);
+                        $update = $koneksi->prepare("UPDATE jenis_barang SET code_barang = ?, jenis_barang = ? WHERE id = ?");
+                        $update->bind_param("ssi", $code_barang, $jenis_barang, $id);
 
                         if ($update->execute()) {
                             echo "<script>
