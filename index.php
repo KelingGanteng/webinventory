@@ -124,6 +124,24 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         Pilih Menu
       </div>
 
+      <li class="nav-item active">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseData" aria-expanded="true"
+          aria-controls="collapseData">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Data Master</span>
+        </a>
+        <div id="collapseData" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Menu:</h6>
+            <a class="collapse-item" href="?page=jenisbarang">Jenis Barang</a>
+            <a class="collapse-item" href="?page=satuanbarang">Satuan Barang</a>
+            <a class="collapse-item" href="?page=gudang">Data Barang</a>
+            <!--<a class="collapse-item" href="?page=supplier">Data Supplier</a> -->>
+
+          </div>
+        </div>
+      </li>
+
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
@@ -137,7 +155,6 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             <a class="collapse-item" href="?page=barangmasuk">Barang Masuk</a>
             <a class="collapse-item" href="?page=barangkeluar">Barang Keluar</a>
 
-
           </div>
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan"
@@ -148,45 +165,14 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         <div id="collapseLaporan" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Menu Laporan:</h6>
-            <a class="collapse-item" href="?page=laporan_supplier">Laporan Supplier</a>
+            <!-- <a class="collapse-item" href="?page=laporan_supplier">Laporan Supplier</a> -->
             <a class="collapse-item" href="?page=laporan_barangmasuk">Laporan Barang Masuk</a>
             <a class="collapse-item" href="?page=laporan_gudang">Laporan Stok Gudang</a>
             <a class="collapse-item" href="?page=laporan_barangkeluar">Laporan Barang Keluar</a>
           </div>
         </div>
       </li>
-
-
       </li>
-
-
-
-      <li class="nav-item active">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseData" aria-expanded="true"
-          aria-controls="collapseData">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Data Master</span>
-        </a>
-        <div id="collapseData" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Menu:</h6>
-            <a class="collapse-item" href="?page=jenisbarang">Jenis Barang</a>
-            <a class="collapse-item" href="?page=gudang">Data Barang</a>
-            <a class="collapse-item" href="?page=satuanbarang">Satuan Barang</a>
-            <a class="collapse-item" href="?page=supplier">Data Supplier</a>
-
-          </div>
-        </div>
-      </li>
-
-
-
-
-
-
-
-
-
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

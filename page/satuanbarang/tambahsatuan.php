@@ -35,24 +35,26 @@
 					if (isset($_POST['simpan'])) {
 						$satuan = $_POST['satuan'];
 
-
-
-
-
-						$sql = $koneksi->query("INSERT INTO satuan (satuan) 
-                                                VALUES('$id')");
-
-						if ($sql) {
+						if (empty($satuan)) {
 							?>
-
 							<script type="text/javascript">
-								alert("Data Berhasil Disimpan");
-								window.location.href = "?page=satuanbarang";
+								alert("Satuan barang tidak boleh kosong!");
 							</script>
-
 							<?php
+						} else {
+							$sql = $koneksi->query("INSERT INTO satuan (satuan) VALUES('$satuan')");
+
+							if ($sql) {
+								?>
+								<script type="text/javascript">
+									alert("Data Berhasil Disimpan");
+									window.location.href = "?page=satuanbarang";
+								</script>
+								<?php
+							}
 						}
 					}
+
 
 
 					?>
