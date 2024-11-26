@@ -1,5 +1,5 @@
 <?php
-include("../../koneksibarang.php");
+$koneksi = new mysqli("localhost", "root", "", "webinventory");
 $tamp = $_POST['tamp'];
 $pecah_bar = explode(".", $tamp);
 $kode_bar = $pecah_bar[0];

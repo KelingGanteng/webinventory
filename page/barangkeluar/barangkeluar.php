@@ -8,7 +8,7 @@
 			<!-- Tambah tombol di atas tabel -->
 			<div class="mb-3">
 				<a href="?page=barangkeluar&aksi=tambahbarangkeluar" class="btn btn-primary">
-					<i class="fas fa-plus"></i> Tambah Barang Keluar
+					<i class="fas fa-plus"></i> Tambah Barang
 				</a>
 			</div>
 
