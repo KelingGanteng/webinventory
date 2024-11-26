@@ -2,13 +2,13 @@
 <div class="container-fluid">
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
-			<h6 class="m-0 font-weight-bold text-primary">Barang keluar</h6>
+			<h6 class="m-0 font-weight-bold text-primary">Barang Keluar</h6>
 		</div>
 		<div class="card-body">
 			<!-- Tambah tombol di atas tabel -->
 			<div class="mb-3">
 				<a href="?page=barangkeluar&aksi=tambahbarangkeluar" class="btn btn-primary">
-					<i class="fas fa-plus"></i> Tambah Barang
+					<i class="fas fa-plus"></i> Tambah Barang Keluar
 				</a>
 			</div>
 
@@ -34,18 +34,15 @@
 							<th>Nama Barang</th>
 							<th>Jumlah Keluar</th>
 							<th>Satuan</th>
-							<th>Tujuan</th>
-
 							<th>Pengaturan</th>
-
 						</tr>
 					</thead>
-
 
 					<tbody>
 						<?php
 						$no = 1;
-						$sql = $koneksi->query("SELECT * FROM barang_keluar");
+						// Query dengan JOIN untuk mendapatkan data satuan dari tabel gudang
+						$sql = $koneksi->query("SELECT barang_keluar.*, gudang.satuan FROM barang_keluar INNER JOIN gudang ON barang_keluar.kode_barang = gudang.kode_barang");
 						while ($data = $sql->fetch_assoc()) {
 							?>
 							<tr>
@@ -55,27 +52,19 @@
 								<td><?php echo $data['kode_barang']; ?></td>
 								<td><?php echo $data['nama_barang']; ?></td>
 								<td><?php echo $data['jumlah']; ?></td>
-								<td><?php echo $data['satuan']; ?></td>
-								<td><?php echo $data['tujuan']; ?></td>
+								<td><?php echo $data['satuan']; ?></td> <!-- Menampilkan satuan dari tabel gudang -->
 								<td>
 									<a onclick="return confirm('Apakah anda yakin akan menghapus data ini?')"
 										href="?page=barangkeluar&aksi=hapusbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
 										class="btn btn-danger">Hapus</a>
 								</td>
 							</tr>
-							<?php
-						}
-						?>
+						<?php } ?>
 					</tbody>
-
-				</table>
-				<a href="?page=barangkeluar&aksi=tambahbarangkeluar" class="btn btn-primary">Tambah</a>
-				</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
-
 </div>
 
 <script>
