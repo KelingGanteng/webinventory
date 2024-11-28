@@ -10135,3 +10135,32 @@ body.sidebar-toggled footer.sticky-footer {
 .sidebar.toggled .sidebar-brand-icon img {
   max-width: 30px;
 }
+
+
+
+
+
+
+
+#kerusakan-list {
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  width: 100%;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  z-index: 1000;
+}
+
+#kerusakan-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+#kerusakan-list li:hover {
+  background-color: #f1f1f1;
+}

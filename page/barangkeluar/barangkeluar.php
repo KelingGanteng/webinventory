@@ -11,6 +11,11 @@
 					<i class="fas fa-plus"></i> Tambah Barang
 				</a>
 			</div>
+			<div class="mb-3">
+				<a href="export2.php" class="btn btn-primary">
+					<i class="fas fa-plus"></i> Export Table
+				</a>
+			</div>
 
 			<div class="row mb-3">
 				<div class="col-md-6">
@@ -32,6 +37,7 @@
 							<th>Tanggal Keluar</th>
 							<th>Kode Barang</th>
 							<th>Nama Barang</th>
+							<th>Kondisi</th>
 							<th>Jumlah Keluar</th>
 							<th>Satuan</th>
 							<th>Pengaturan</th>
@@ -51,6 +57,7 @@
 								<td><?php echo $data['tanggal']; ?></td>
 								<td><?php echo $data['kode_barang']; ?></td>
 								<td><?php echo $data['nama_barang']; ?></td>
+								<td><?php echo $data['kondisi']; ?></td>
 								<td><?php echo $data['jumlah']; ?></td>
 								<td><?php echo $data['satuan']; ?></td> <!-- Menampilkan satuan dari tabel gudang -->
 								<td>

@@ -11,6 +11,11 @@
                     <i class="fas fa-plus"></i> Tambah Barang
                 </a>
             </div>
+            <div class="mb-3">
+                <a href="export.php" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Export Table
+                </a>
+            </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">

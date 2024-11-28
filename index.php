@@ -154,6 +154,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             <h6 class="collapse-header">Menu:</h6>
             <a class="collapse-item" href="?page=barangmasuk">Barang Masuk</a>
             <a class="collapse-item" href="?page=barangkeluar">Barang Keluar</a>
+            <a class="collapse-item" href="?page=barangretur">Barang Retur</a>
 
           </div>
       <li class="nav-item active">
@@ -308,6 +309,22 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
               if ($aksi == "hapusbarangmasuk") {
                 include "page/barangmasuk/hapusbarangmasuk.php";
+              }
+            }
+
+            if ($page == "barangretur") {
+              if ($aksi == "") {
+                include "page/barangretur/barangretur.php";
+              }
+              if ($aksi == "tambahbarangretur") {
+                include "page/barangretur/tambahbarangretur.php";
+              }
+              if ($aksi == "ubahbarangretur") {
+                include "page/barangretur/ubahbarangretur.php";
+              }
+
+              if ($aksi == "hapusbarangretur") {
+                include "page/barangretur/hapusbarangretur.php";
               }
             }
 

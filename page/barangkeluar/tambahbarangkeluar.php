@@ -139,6 +139,41 @@ $tanggal_keluar = date("Y-m-d");
 							</div>
 						</div>
 
+						<label for="kondisi">Kondisi</label>
+						<div class="form-group">
+							<div class="form-line">
+								<!-- Menampilkan checkbox dalam format sederhana -->
+								<div class="checkbox-group">
+									<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
+									<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
+									<label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
+								</div>
+							</div>
+						</div>
+
+						<style>
+							.checkbox-group {
+								display: flex;
+								flex-wrap: wrap;
+								/* Membuat checkbox bisa berada dalam baris yang sama atau dibungkus jika panjang */
+							}
+
+							.checkbox-group label {
+								display: inline-block;
+								margin-right: 20px;
+								/* Memberi jarak antar checkbox */
+								font-size: 14px;
+								/* Menjaga ukuran font agar tetap konsisten */
+							}
+
+							.checkbox-group input {
+								margin-right: 5px;
+								/* Memberikan sedikit jarak antara checkbox dan teks label */
+							}
+						</style>
+
+
+
 						<label for="total">Total Stok</label>
 						<div class="form-group">
 							<div class="form-line">
@@ -175,6 +210,7 @@ $tanggal_keluar = date("Y-m-d");
 						$pecah_barang = explode(".", $barang);
 						$kode_barang = $pecah_barang[0];
 						$nama_barang = $pecah_barang[1];
+						$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
 						$jumlah = $_POST['jumlahkeluar'];
 
 						$satuan = $_POST['satuan'];
@@ -195,8 +231,8 @@ $tanggal_keluar = date("Y-m-d");
 						} else {
 
 
-							$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, satuan) 
-							VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$satuan')");
+							$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan) 
+							VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
 							$sql2 = $koneksi->query("update gudang set jumlah=(jumlah) where kode_barang='$kode_barang'");
 							?>
 

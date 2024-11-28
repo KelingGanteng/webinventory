@@ -40,10 +40,20 @@
 							</div>
 						</div>
 
-						<label for="">Kerusakan</label>
+						<label for="">Kondisi</label>
 						<div class="form-group">
 							<div class="form-line">
-								<input type="text" name="kerusakan" class="form-control" required />
+								<div class="checkbox-list">
+									<?php
+									// Daftar kondisi barang yang bisa dipilih
+									$kondisi_options = ['Baik', 'Rusak', 'Perbaikan', 'Bekas']; // Misalnya, daftar kondisi barang
+									foreach ($kondisi_options as $kondisi) {
+										echo "<label class='checkbox-inline'>
+                        			<input type='checkbox' name='kondisi[]' value='" . $kondisi . "' /> " . $kondisi . "
+                      				</label>&nbsp;&nbsp;";
+									}
+									?>
+								</div>
 							</div>
 						</div>
 
@@ -77,32 +87,39 @@
 					if (isset($_POST['simpan'])) {
 						$kode_barang = $_POST['kode_barang'];
 						$nama_barang = $_POST['nama_barang'];
-						$kerusakan = $_POST['kerusakan'];
+						$kerusakan = $_POST['kondisi'];
 						$jenis_barang = $_POST['jenis_barang'];
 						$jumlah = $_POST['jumlah'];
 						$satuan = $_POST['satuan'];
 
-						// Cek apakah kode barang sudah ada
+
+						// Memproses kondisi (dari checkbox)
+						if (isset($_POST['kondisi'])) {
+							$kondisi = implode(", ", $_POST['kondisi']); // Menyimpan kondisi yang dipilih dalam format string
+						} else {
+							$kondisi = "Tidak diketahui"; // Default jika tidak ada kondisi yang dipilih
+						}
+
 						$cek = $koneksi->query("SELECT kode_barang FROM gudang WHERE kode_barang='$kode_barang'");
 						if ($cek->num_rows > 0) {
 							echo "<script>
-                                alert('Kode barang sudah ada di gudang!');
-                            </script>";
+								alert('Kode barang sudah ada di gudang!');
+							</script>";
 						} else {
 							$sql = $koneksi->query("INSERT INTO gudang 
-                                (kode_barang, nama_barang, kerusakan, jenis_barang, jumlah, satuan) 
-                                VALUES 
-                                ('$kode_barang', '$nama_barang', '$kerusakan', '$jenis_barang', '$jumlah', '$satuan')");
+								(kode_barang, nama_barang, kondisi, jenis_barang, jumlah, satuan) 
+								VALUES 
+								('$kode_barang', '$nama_barang', '$kondisi', '$jenis_barang', '$jumlah', '$satuan')");
 
 							if ($sql) {
 								echo "<script>
-                                    alert('Data Berhasil Disimpan');
-                                    window.location.href='?page=gudang';
-                                </script>";
+									alert('Data Berhasil Disimpan');
+									window.location.href='?page=gudang';
+								</script>";
 							} else {
 								echo "<script>
-                                    alert('Gagal menyimpan data: " . $koneksi->error . "');
-                                </script>";
+									alert('Gagal menyimpan data: " . $koneksi->error . "');
+								</script>";
 							}
 						}
 					}

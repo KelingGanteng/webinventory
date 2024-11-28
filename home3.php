@@ -61,9 +61,9 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <a href="?page=supplier">
+              <a href="?page=jenisbarang">
                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                  <h4>Data Supplier</h4>
+                  <h4>Jenis Barang</h4>
                 </div>
                 <div class="row no-gutters align-items-center">
                   <div class="col-auto">

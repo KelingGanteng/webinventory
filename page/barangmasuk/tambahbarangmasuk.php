@@ -85,6 +85,31 @@ $tanggal_masuk = date("Y-m-d");  // Ambil tanggal sekarang
 							</div>
 						</div>
 
+						<label for="">Kondisi</label>
+						<div class="form-group">
+							<div class="form-line">
+								<!-- Menampilkan checkbox dalam format sederhana -->
+								<div class="checkbox-group">
+									<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
+									<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
+									<label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
+									<label><input type="checkbox" name="kondisi[]" value="Basi" /> Basi</label>
+								</div>
+							</div>
+						</div>
+						<style>
+							.checkbox-group label {
+								display: inline-block;
+								margin-right: 15px;
+								font-size: 14px;
+							}
+
+							.checkbox-group input {
+								margin-right: 5px;
+							}
+						</style>
+
+
 						<label for="jumlah">Total Stok</label>
 						<div class="form-group">
 							<div class="form-line">
@@ -125,21 +150,25 @@ $tanggal_masuk = date("Y-m-d");  // Ambil tanggal sekarang
 						$jumlah = $_POST['jumlahmasuk'];
 						$satuan = $_POST['satuan'];
 
+						// Menangani kondisi yang dikirimkan sebagai array
+						$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : '';
+
 						// Insert data barang masuk
-						$sql = $koneksi->query("INSERT INTO barang_masuk (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, satuan) 
-												VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$satuan')");
+						$sql = $koneksi->query("INSERT INTO barang_masuk (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, satuan, kondisi) 
+										VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$satuan', '$kondisi')");
 
 						if ($sql) {
 							echo "<script type='text/javascript'>
-									alert('Simpan Data Berhasil');
-									window.location.href = '?page=barangmasuk';
-								  </script>";
+							alert('Simpan Data Berhasil');
+							window.location.href = '?page=barangmasuk';
+						  </script>";
 						} else {
 							echo "<script type='text/javascript'>
-									alert('Simpan Data Gagal');
-								  </script>";
+							alert('Simpan Data Gagal');
+						  </script>";
 						}
 					}
+
 					?>
 				</div>
 			</div>

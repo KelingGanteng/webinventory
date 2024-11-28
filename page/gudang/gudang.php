@@ -11,6 +11,11 @@
           <i class="fas fa-plus"></i> Tambah Barang
         </a>
       </div>
+      <div class="mb-3">
+        <a href="export3.php" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Export Table
+        </a>
+      </div>
       <div class="table-responsive">
         <table class="table table-bordered" id="gudang" width="100%" cellspacing="0">
           <!-- Include DataTables CSS -->
@@ -19,7 +24,7 @@
               <th>No</th>
               <th>Kode Barang</th>
               <th>Nama Barang</th>
-              <th>Kerusakan</th>
+              <th>Kondisi</th>
               <th>Jenis Barang</th>
               <th>Jumlah</th>
               <th>Satuan</th>
@@ -36,7 +41,7 @@
                 <td><?php echo $no++; ?></td>
                 <td><?php echo htmlspecialchars($data['kode_barang']); ?></td>
                 <td><?php echo htmlspecialchars($data['nama_barang']); ?></td>
-                <td><?php echo htmlspecialchars($data['kerusakan']); ?></td>
+                <td><?php echo htmlspecialchars($data['kondisi']); ?></td>
                 <td><?php echo htmlspecialchars($data['jenis_barang']); ?></td>
                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                 <td><?php echo htmlspecialchars($data['satuan']); ?></td>
