@@ -93,26 +93,6 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                         <input type="text" name="kerusakan" id="kerusakan" class="form-control" />
                     </div>
 
-                    <!-- Tambahkan jQuery dan jQuery UI -->
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                    <link rel="stylesheet"
-                        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
-                    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#kerusakan").autocomplete({
-                                source: "fetchKerusakan.php", // Ganti dengan path ke file PHP yang Anda buat
-                                minLength: 2 // Minimal karakter yang harus dimasukkan sebelum pencarian dimulai
-                            });
-                        });
-                    </script>
-
-
-
-
-
-
                     <!-- Jumlah Barang -->
                     <label for="jumlah_retur">Jumlah Retur</label>
                     <div class="form-group">
