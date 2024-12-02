@@ -29,7 +29,6 @@
                             <th>Kondisi</th>
                             <th>Kerusakan</th>
                             <th>Jumlah Retur</th>
-                            <th>Tujuan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -48,7 +47,6 @@
                                 <td><?php echo htmlspecialchars($data['kondisi']); ?></td>
                                 <td><?php echo htmlspecialchars($data['kerusakan']); ?></td>
                                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
-                                <td><?php echo htmlspecialchars($data['tujuan']); ?></td>
                                 <!-- Ubah bagian tombol hapus di dalam loop while -->
                                 <td>
 

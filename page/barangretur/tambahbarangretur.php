@@ -120,11 +120,7 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                     </div>
 
 
-                    <!-- Tujuan Retur -->
-                    <label for="tujuan">Tujuan Retur</label>
-                    <div class="form-group">
-                        <input type="text" name="tujuan" class="form-control" />
-                    </div>
+
 
                     <input type="submit" name="simpan_retur" value="Simpan Retur" class="btn btn-primary" />
                 </form>

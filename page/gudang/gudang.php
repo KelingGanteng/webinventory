@@ -131,3 +131,10 @@
     });
   });
 </script>
+
+<?php
+// Query untuk menghitung total jumlah barang
+$sql = $koneksi->query("SELECT SUM(jumlah) AS total_stok FROM gudang");
+$data = $sql->fetch_assoc();
+$total_stok = $data['total_stok'];
+?>

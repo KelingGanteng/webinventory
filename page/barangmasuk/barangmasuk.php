@@ -52,6 +52,7 @@
                         $no = 1;
                         $sql = $koneksi->query("SELECT * FROM barang_masuk");
                         while ($data = $sql->fetch_assoc()) {
+
                             ?>
                             <tr>
                                 <td><?php echo $no++; ?></td>
@@ -60,7 +61,7 @@
                                 <td><?php echo $data['kode_barang'] ?></td>
                                 <td><?php echo $data['nama_barang'] ?></td>
                                 <td><?php echo $data['kondisi'] ?></td>
-                                <td><?php echo $data['jumlah'] ?></td> <!-- Hapus kolom Pengirim -->
+                                <td><?php echo $data['jumlah'] ?></td>
                                 <td><?php echo $data['satuan'] ?></td>
                                 <td>isi total stok</td>
                                 <td>

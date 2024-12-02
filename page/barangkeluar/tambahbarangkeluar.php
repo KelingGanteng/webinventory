@@ -7,22 +7,22 @@
 			document.getElementById('total').value = result;
 		}
 	}
-
 	$(document).ready(function () {
 		// Ketika barang dipilih
 		$('#cmb_barang').change(function () {
 			var tamp = $(this).val(); // Ambil nilai barang
 			$.ajax({
 				type: 'POST',
-				url: 'get_satuan.php',
-				data: { tamp: tamp },  // Kirimkan kode barang untuk mengambil satuan
+				url: 'get_satuan.php',  // Pastikan ini adalah file yang mengembalikan satuan
+				data: { tamp: tamp },    // Kirimkan kode barang untuk mengambil satuan
 				success: function (response) {
 					// Masukkan response (HTML satuan) ke dalam div tampung
-					$('.tampung').html(response);
+					$('.tampung').html(response);  // Tampilkan satuan di div
 				}
 			});
 		});
 	});
+
 </script>
 
 </script>
@@ -204,50 +204,39 @@ $tanggal_keluar = date("Y-m-d");
 				$id_transaksi = $_POST['id_transaksi'];
 				$tanggal = $_POST['tanggal_keluar'];
 
+				// Pisahkan kode barang dan nama barang
 				$barang = $_POST['barang'];
 				$pecah_barang = explode(".", $barang);
 				$kode_barang = $pecah_barang[0];
 				$nama_barang = $pecah_barang[1];
+
+				// Ambil kondisi yang dipilih
 				$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
+			
 				$jumlah = $_POST['jumlahkeluar'];
-
-				// $satuan = $_POST['satuan'];
+				$satuan = $_POST['satuan'];  // Ambil satuan yang dipilih
 			
-				// $sis2 = 0;
-				$total = $_POST['total'];
-				if ($total <= 0) {
+				// Ambil stok dari gudang untuk barang yang dipilih
+				$sql_stok = $koneksi->query("SELECT jumlah FROM gudang WHERE kode_barang = '$kode_barang'");
+				$stok_data = $sql_stok->fetch_assoc();
+				$stok_tersedia = $stok_data['jumlah'];
 
-					// var_dump('stok tidak ada');
-			
-
-					?>
-
-					<script type="text/javascript">
-						alert("Stok Barang Habis, Transaksi Tidak Dapat Dilakukan");
-						window.location.href = "?page=barangkeluar&aksi=tambahbarangkeluar";
-					</script>;
-
-					<?php
+				// Cek apakah jumlah keluar lebih besar dari stok yang tersedia
+				if ($jumlah > $stok_tersedia) {
+					echo "<script>alert('Jumlah keluar melebihi stok yang tersedia!'); window.location.href = '?page=barangkeluar&aksi=tambahbarangkeluar';</script>";
 				} else {
-
-
+					// Proses simpan data barang keluar
+					$total = $stok_tersedia - $jumlah;  // Hitung stok sisa setelah barang keluar
+			
+					// Simpan transaksi barang keluar
 					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan) 
-							VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
-					$sql2 = $koneksi->query("update gudang set jumlah=(jumlah) where kode_barang='$kode_barang'");
-					?>
+            VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
 
+					// Update stok di gudang setelah transaksi
+					$sql2 = $koneksi->query("UPDATE gudang SET jumlah = $total WHERE kode_barang = '$kode_barang'");
 
-
-
-
-					<script type="text/javascript">
-						alert("Simpan Data Berhasil");
-						window.location.href = "?page=barangkeluar";
-
-					</script>
-					<?php
+					// Tampilkan pesan berhasil dan redirect
+					echo "<script>alert('Simpan Data Berhasil'); window.location.href = '?page=barangkeluar';</script>";
 				}
 			}
-
-
 			?>
