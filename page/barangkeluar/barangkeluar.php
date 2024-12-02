@@ -61,9 +61,15 @@
 								<td><?php echo $data['jumlah']; ?></td>
 								<td><?php echo $data['satuan']; ?></td> <!-- Menampilkan satuan dari tabel gudang -->
 								<td>
-									<a onclick="return confirm('Apakah anda yakin akan menghapus data ini?')"
-										href="?page=barangkeluar&aksi=hapusbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-										class="btn btn-danger">Hapus</a>
+									<a href="?page=barangkeluar&aksi=ubahbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
+										class="btn btn-info btn-sm mb-1">
+										<i class="fas fa-edit"></i> Edit
+									</a>
+									<!-- Setelah -->
+									<a href="?page=barangkeluar&aksi=hapusbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
+										class="btn btn-danger btn-sm"
+										onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
+										<i class="fas fa-trash"></i> Hapus
 								</td>
 							</tr>
 						<?php } ?>
@@ -139,4 +145,13 @@
 			table.draw();
 		});
 	});
+
+
+
+
 </script>
+
+
+<head>
+
+</head>

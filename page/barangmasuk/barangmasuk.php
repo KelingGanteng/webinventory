@@ -37,8 +37,10 @@
                             <th>Tanggal Masuk</th>
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
+                            <th>Kondisi</th>
                             <th>Jumlah Masuk</th> <!-- Hapus kolom Pengirim -->
                             <th>Satuan Barang</th>
+                            <th>Total Stok</th>
                             <th>Pengaturan</th>
                         </tr>
                     </thead>
@@ -57,12 +59,20 @@
                                 <td><?php echo $data['tanggal'] ?></td>
                                 <td><?php echo $data['kode_barang'] ?></td>
                                 <td><?php echo $data['nama_barang'] ?></td>
+                                <td><?php echo $data['kondisi'] ?></td>
                                 <td><?php echo $data['jumlah'] ?></td> <!-- Hapus kolom Pengirim -->
                                 <td><?php echo $data['satuan'] ?></td>
+                                <td>isi total stok</td>
                                 <td>
-                                    <a onclick="return confirm('Apakah anda yakin akan menghapus data ini?')"
-                                        href="?page=barangmasuk&aksi=hapusbarangmasuk&id_transaksi=<?php echo $data['id_transaksi'] ?>"
-                                        class="btn btn-danger">Hapus</a>
+                                    <a href="?page=barangmasuk&aksi=ubahbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
+                                        class="btn btn-info btn-sm mb-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <!-- Setelah -->
+                                    <a href="?page=barangmasuk&aksi=hapusbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
                                 </td>
                             </tr>
                         <?php } ?>

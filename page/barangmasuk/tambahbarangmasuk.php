@@ -1,12 +1,46 @@
 <script>
-	function sum() {
-		var stok = document.getElementById('stok').value;
-		var jumlahmasuk = document.getElementById('jumlahmasuk').value;
-		var result = parseInt(stok) + parseInt(jumlahmasuk);
-		if (!isNaN(result)) {
-			document.getElementById('jumlah').value = result;
+	$(document).ready(function () {
+		// Ketika barang dipilih
+		$('#cmb_barang').change(function () {
+			var tamp = $(this).val(); // Ambil nilai barang
+			var kode_barang = tamp.split(".")[0]; // Ambil kode barang dari pilihan
+
+			// Mengambil stok barang dari database
+			$.ajax({
+				type: 'POST',
+				url: 'get_stok.php', // Skrip PHP untuk mengambil stok barang
+				data: { kode_barang: kode_barang },
+				success: function (response) {
+					// Update stok yang ada di input
+					$('#stok').val(response); // Menampilkan stok barang
+					calculateTotalStock(); // Menghitung total stok setelah memasukkan jumlah
+				}
+			});
+
+			// Ambil satuan barang
+			$.ajax({
+				type: 'POST',
+				url: 'get_satuan1.php',
+				data: { tamp: tamp }, // Kirimkan kode barang untuk mengambil satuan
+				success: function (response) {
+					$('.tampung1').html(response); // Menampilkan satuan barang
+				}
+			});
+		});
+
+		// Ketika jumlah barang dimasukkan, hitung total stok
+		$('#jumlahmasuk').on('input', function () {
+			calculateTotalStock(); // Menghitung total stok
+		});
+
+		function calculateTotalStock() {
+			var stok = parseInt($('#stok').val()) || 0; // Ambil stok dari input, pastikan angka
+			var jumlahmasuk = parseInt($('#jumlahmasuk').val()) || 0; // Ambil jumlah barang masuk, pastikan angka
+			var total = stok + jumlahmasuk; // Total stok = stok yang ada + jumlah barang yang dimasukkan
+			$('#jumlah').val(total); // Update input total stok
 		}
-	}
+	});
+
 </script>
 
 <?php
@@ -73,17 +107,20 @@ $tanggal_masuk = date("Y-m-d");  // Ambil tanggal sekarang
 									?>
 								</select>
 							</div>
+							<div class="tampung1"></div>
+
 						</div>
 
 						<div class="tampung"></div>
 
-						<label for="">Jumlah</label>
+						<label for="">Jumlah masuk</label>
 						<div class="form-group">
 							<div class="form-line">
-								<input type="text" name="jumlahmasuk" id="jumlahmasuk" onkeyup="sum()"
-									class="form-control" />
+								<input type="number" name="jumlahmasuk" class="form-control" style="max-width: 70px;"
+									inputmode="numeric" min="0" step="1" />
 							</div>
 						</div>
+
 
 						<label for="">Kondisi</label>
 						<div class="form-group">
@@ -92,8 +129,7 @@ $tanggal_masuk = date("Y-m-d");  // Ambil tanggal sekarang
 								<div class="checkbox-group">
 									<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
 									<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
-									<label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
-									<label><input type="checkbox" name="kondisi[]" value="Basi" /> Basi</label>
+									<label><input type="checkbox" name="kondisi[]" value="Bekas" /> Bekas</label>
 								</div>
 							</div>
 						</div>

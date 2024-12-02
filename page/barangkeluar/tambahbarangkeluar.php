@@ -128,126 +128,126 @@ $tanggal_keluar = date("Y-m-d");
 						</div>
 						<div class="tampung"></div>
 
+
 						<label for="">Jumlah</label>
 						<div class="form-group">
 							<div class="form-line">
-								<input type="text" name="jumlahkeluar" id="jumlahkeluar" onkeyup="sum()"
-									class="form-control" />
-
-
-
-							</div>
-						</div>
-
-						<label for="kondisi">Kondisi</label>
-						<div class="form-group">
-							<div class="form-line">
-								<!-- Menampilkan checkbox dalam format sederhana -->
-								<div class="checkbox-group">
-									<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
-									<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
-									<label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
-								</div>
-							</div>
-						</div>
-
-						<style>
-							.checkbox-group {
-								display: flex;
-								flex-wrap: wrap;
-								/* Membuat checkbox bisa berada dalam baris yang sama atau dibungkus jika panjang */
-							}
-
-							.checkbox-group label {
-								display: inline-block;
-								margin-right: 20px;
-								/* Memberi jarak antar checkbox */
-								font-size: 14px;
-								/* Menjaga ukuran font agar tetap konsisten */
-							}
-
-							.checkbox-group input {
-								margin-right: 5px;
-								/* Memberikan sedikit jarak antara checkbox dan teks label */
-							}
-						</style>
-
-
-
-						<label for="total">Total Stok</label>
-						<div class="form-group">
-							<div class="form-line">
-								<input readonly="readonly" name="total" id="total" type="number" class="form-control">
-
-
-							</div>
-						</div>
-
-						<div class="tampung1"></div>
-
-						<label for="">Tujuan</label>
-						<div class="form-group">
-							<div class="form-line">
-								<input type="text" name="tujuan" class="form-control" />
+								<input type="number" name="jumlahkeluar" class="form-control" style="max-width: 70px;"
+									inputmode="numeric" min="0" step="1" />
 							</div>
 						</div>
 
 
 
-						<input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
+				</div>
+			</div>
 
-					</form>
+			<label for="kondisi">Kondisi</label>
+			<div class="form-group">
+				<div class="form-line">
+					<!-- Menampilkan checkbox dalam format sederhana -->
+					<div class="checkbox-group">
+						<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
+						<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
+						<label><input type="checkbox" name="kondisi[]" value="Bekas" /> Bekas</label>
+					</div>
+				</div>
+			</div>
 
+			<style>
+				.checkbox-group {
+					display: flex;
+					flex-wrap: wrap;
+					/* Membuat checkbox bisa berada dalam baris yang sama atau dibungkus jika panjang */
+				}
 
+				.checkbox-group label {
+					display: inline-block;
+					margin-right: 20px;
+					/* Memberi jarak antar checkbox */
+					font-size: 14px;
+					/* Menjaga ukuran font agar tetap konsisten */
+				}
 
-					<?php
-
-					if (isset($_POST['simpan'])) {
-						$id_transaksi = $_POST['id_transaksi'];
-						$tanggal = $_POST['tanggal_keluar'];
-
-						$barang = $_POST['barang'];
-						$pecah_barang = explode(".", $barang);
-						$kode_barang = $pecah_barang[0];
-						$nama_barang = $pecah_barang[1];
-						$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
-						$jumlah = $_POST['jumlahkeluar'];
-
-						$satuan = $_POST['satuan'];
-						$tujuan = $_POST['tujuan'];
-
-
-						$total = $_POST['total'];
-						$sisa2 = $total;
-						if ($sisa2 < 0) {
-							?>
-
-							<script type="text/javascript">
-								alert("Stok Barang Habis, Transaksi Tidak Dapat Dilakukan");
-								window.location.href = "?page=barangkeluar&aksi=tambahbarangkeluar";
-							</script>
-
-							<?php
-						} else {
-
-
-							$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan) 
-							VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
-							$sql2 = $koneksi->query("update gudang set jumlah=(jumlah) where kode_barang='$kode_barang'");
-							?>
+				.checkbox-group input {
+					margin-right: 5px;
+					/* Memberikan sedikit jarak antara checkbox dan teks label */
+				}
+			</style>
 
 
 
+			<label for="total">Total Stok</label>
+			<div class="form-group">
+				<div class="form-line">
+					<input readonly="readonly" name="jumlah" id="jumlah" type="number" class="form-control">
 
 
-							<script type="text/javascript">
-								alert("Simpan Data Berhasil");
-								window.location.href = "?page=barangkeluar";
+				</div>
+			</div>
 
-							</script>
-							<?php
-						}
-					}
+			<div class="tampung1"></div>
 
+
+
+
+
+			<input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
+
+			</form>
+
+
+
+			<?php
+
+			if (isset($_POST['simpan'])) {
+				$id_transaksi = $_POST['id_transaksi'];
+				$tanggal = $_POST['tanggal_keluar'];
+
+				$barang = $_POST['barang'];
+				$pecah_barang = explode(".", $barang);
+				$kode_barang = $pecah_barang[0];
+				$nama_barang = $pecah_barang[1];
+				$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
+				$jumlah = $_POST['jumlahkeluar'];
+
+				// $satuan = $_POST['satuan'];
+			
+				// $sis2 = 0;
+				$total = $_POST['total'];
+				if ($total <= 0) {
+
+					// var_dump('stok tidak ada');
+			
 
 					?>
+
+					<script type="text/javascript">
+						alert("Stok Barang Habis, Transaksi Tidak Dapat Dilakukan");
+						window.location.href = "?page=barangkeluar&aksi=tambahbarangkeluar";
+					</script>;
+
+					<?php
+				} else {
+
+
+					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan) 
+							VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
+					$sql2 = $koneksi->query("update gudang set jumlah=(jumlah) where kode_barang='$kode_barang'");
+					?>
+
+
+
+
+
+					<script type="text/javascript">
+						alert("Simpan Data Berhasil");
+						window.location.href = "?page=barangkeluar";
+
+					</script>
+					<?php
+				}
+			}
+
+
+			?>

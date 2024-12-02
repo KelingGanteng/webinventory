@@ -1,4 +1,3 @@
-<!-- Begin Page Content -->
 <div class="container-fluid">
   <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -24,15 +23,13 @@
           </thead>
           <tbody>
             <?php
-            $no = 1;
+            $no = 1; // Inisialisasi nomor urut
+            // Pastikan data diurutkan dengan benar berdasarkan ID atau kolom yang sesuai
             $sql = $koneksi->query("SELECT * FROM satuan");
             while ($data = $sql->fetch_assoc()) {
-              // Debug - tampilkan data
-              echo "<!-- Debug: ";
-              print_r($data);
-              echo " -->";
               ?>
               <tr>
+                <!-- Tampilkan nomor urut -->
                 <td><?php echo $no++; ?></td>
                 <td><?php echo $data['satuan']; ?></td>
                 <td>
@@ -48,14 +45,12 @@
             <?php } ?>
           </tbody>
         </table>
-
       </div>
     </div>
   </div>
 </div>
 
 <script>
-
   $(document).ready(function () {
     $('#satuanbarang').DataTable({
       dom: 'Bfrtip',
@@ -100,7 +95,7 @@
           previous: "Sebelumnya"
         }
       },
-      order: [[1, 'asc']], // Urutkan berdasarkan kode barang
+      order: [[1, 'asc']], // Urutkan berdasarkan kolom pertama (satuan barang)
       pageLength: 10 // Jumlah data per halaman
     });
   });

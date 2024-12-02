@@ -82,22 +82,43 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                     <div class="form-group">
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
-                            <label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
+                            <label><input type="checkbox" name="kondisi[]" value="Rusak" id="checkbox_rusak" />
+                                Rusak</label>
                             <label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
                         </div>
                     </div>
 
-                    <!-- Kerusakan -->
-                    <label for="kerusakan">Kerusakan</label>
-                    <div class="form-group">
-                        <input type="text" name="kerusakan" id="kerusakan" class="form-control" />
+                    <div id="kerusakan_dropdown" class="form-group" style="display:none;">
+                        <label for="kerusakan">Kerusakan Deskripsi</label>
+                        <div class="form-group">
+                            <textarea name="kerusakan" id="kerusakan" class="form-control" rows="4"
+                                placeholder="Deskripsikan kerusakan..."></textarea>
+                        </div>
+
+                        <script>
+                            document.getElementById('checkbox_rusak').addEventListener('change', function () {
+                                var kerusakanDropdown = document.getElementById('kerusakan_dropdown');
+                                if (this.checked) {
+                                    kerusakanDropdown.style.display = 'block';
+                                } else {
+                                    kerusakanDropdown.style.display = 'none';
+                                }
+                            });
+                        </script>
+
+
+                        </select>
                     </div>
 
-                    <!-- Jumlah Barang -->
-                    <label for="jumlah_retur">Jumlah Retur</label>
+
+                    <label for="">Jumlah</label>
                     <div class="form-group">
-                        <input type="text" name="jumlah_retur" id="jumlah_retur" class="form-control" />
+                        <div class="form-line">
+                            <input type="number" name="jumlah_retur" class="form-control" style="max-width: 70px;"
+                                inputmode="numeric" min="0" step="1" />
+                        </div>
                     </div>
+
 
                     <!-- Tujuan Retur -->
                     <label for="tujuan">Tujuan Retur</label>
@@ -122,7 +143,13 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                     // Ambil kondisi yang dipilih
                     $kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : '';
 
+                    // Ambil kerusakan dan kerusakan detail jika ada
                     $kerusakan = $_POST['kerusakan'];
+                    $kerusakan_detail = isset($_POST['kerusakan_detail']) ? $_POST['kerusakan_detail'] : '';
+                    if ($kerusakan_detail) {
+                        $kerusakan .= ', ' . $kerusakan_detail;
+                    }
+
                     $jumlah_retur = $_POST['jumlah_retur'];
                     $tujuan = $_POST['tujuan'];
 
@@ -132,7 +159,6 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
 
                     // Update stok barang di gudang
                     $sql2 = $koneksi->query("UPDATE gudang SET jumlah = jumlah + $jumlah_retur WHERE kode_barang='$kode_barang'");
-
 
                     ?>
                     <script type="text/javascript">

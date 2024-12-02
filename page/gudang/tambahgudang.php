@@ -46,7 +46,7 @@
 								<div class="checkbox-list">
 									<?php
 									// Daftar kondisi barang yang bisa dipilih
-									$kondisi_options = ['Baik', 'Rusak', 'Perbaikan', 'Bekas']; // Misalnya, daftar kondisi barang
+									$kondisi_options = ['Baik', 'Rusak', 'bekas']; // Misalnya, daftar kondisi barang
 									foreach ($kondisi_options as $kondisi) {
 										echo "<label class='checkbox-inline'>
                         			<input type='checkbox' name='kondisi[]' value='" . $kondisi . "' /> " . $kondisi . "
@@ -57,12 +57,14 @@
 							</div>
 						</div>
 
-						<label for="">Jumlah</label>
+						<label for="jumlah">Jumlah</label>
 						<div class="form-group">
 							<div class="form-line">
-								<input type="number" name="jumlah" class="form-control" required />
+								<input type="number" name="jumlah" class="form-control" style="max-width: 70px;"
+									inputmode="numeric" min="0" step="1" />
 							</div>
 						</div>
+
 
 						<label for="">Satuan Barang</label>
 						<div class="form-group">
@@ -87,7 +89,7 @@
 					if (isset($_POST['simpan'])) {
 						$kode_barang = $_POST['kode_barang'];
 						$nama_barang = $_POST['nama_barang'];
-						$kerusakan = $_POST['kondisi'];
+						$kondisi = $_POST['kondisi'];
 						$jenis_barang = $_POST['jenis_barang'];
 						$jumlah = $_POST['jumlah'];
 						$satuan = $_POST['satuan'];

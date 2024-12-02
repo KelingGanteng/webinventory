@@ -33,6 +33,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
                         <th>Kondisi</th>
+                        <th>Kerusakan</th>
                         <th>Jumlah Retur</th>
                         <th>Tujuan</th>
                     </tr>
@@ -50,6 +51,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
                             <td><?php echo htmlspecialchars($data['kode_barang']); ?></td>
                             <td><?php echo htmlspecialchars($data['nama_barang']); ?></td>
                             <td><?php echo htmlspecialchars($data['kondisi']); ?></td>
+                            <td><?php echo htmlspecialchars($data['kerusakan']); ?></td>
                             <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                             <td><?php echo htmlspecialchars($data['tujuan']); ?></td>
                         </tr>

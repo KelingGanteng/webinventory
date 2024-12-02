@@ -31,6 +31,14 @@ $tampil = $sql2->fetch_assoc();
                             </div>
                         </div>
 
+                        <label for="jumlah">Jumlah</label>
+						<div class="form-group">
+							<div class="form-line">
+								<input type="number" name="jumlah" class="form-control" style="max-width: 70px;"
+									inputmode="numeric" min="0" step="1" />
+							</div>
+						</div>
+
                         <label for="">Kondisi</label>
                         <div class="form-group">
                             <div class="form-line">
@@ -101,6 +109,7 @@ $tampil = $sql2->fetch_assoc();
 
                         // Ambil nilai jenis barang dan pecah ID dan nama
                         $jenis_barang = $_POST['jenis_barang'];
+                        $jumlah = $_POST['jumlah'];
                         $pecah_jenis = explode(".", $jenis_barang);
                         $id_jenis = $pecah_jenis[0];
                         $jenis_barang = $pecah_jenis[1];
@@ -113,7 +122,7 @@ $tampil = $sql2->fetch_assoc();
 
                         // Update data ke database
                         $sql = $koneksi->query("UPDATE gudang 
-                                                SET nama_barang='$nama_barang', kondisi='$kondisi', jenis_barang='$jenis_barang', satuan='$satuan' 
+                                                SET nama_barang='$nama_barang', kondisi='$kondisi', jumlah='$jumlah', jenis_barang='$jenis_barang', satuan='$satuan' 
                                                 WHERE kode_barang='$kode_barang'");
 
                         if ($sql) {
