@@ -6,16 +6,22 @@ if ($koneksi->connect_error) {
     die("Connection failed: " . $koneksi->connect_error);
 }
 
-// Query to fetch data from the database
-$query = "SELECT * FROM barang_masuk";
-$result = $koneksi->query($query);
+// Check if id_transaksi is provided
+if (isset($_GET['id_transaksi'])) {
+    $id_transaksi = $_GET['id_transaksi'];
 
-// Prepare an array to store the data
-$data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+    // Query to fetch the specific data based on id_transaksi
+    $query = "SELECT * FROM barang_masuk WHERE id_transaksi = '$id_transaksi'";
+    $result = $koneksi->query($query);
+
+    if ($result->num_rows > 0) {
+        // Fetch the data and return it as JSON
+        $data = $result->fetch_assoc();
+        echo json_encode($data);
+    } else {
+        echo json_encode([]);
+    }
+} else {
+    echo json_encode([]);
 }
-
-// Return data in JSON format
-echo json_encode($data);
 ?>

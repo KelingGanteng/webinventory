@@ -1,21 +1,27 @@
 <?php
+// Koneksi ke database
 $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
-// Check connection
+// Cek koneksi
 if ($koneksi->connect_error) {
-    die("Connection failed: " . $koneksi->connect_error);
+    die("Koneksi gagal: " . $koneksi->connect_error);
 }
 
-// Query to fetch data from the database
-$query = "SELECT * FROM gudang ORDER BY kode_barang";
+// Query untuk mengambil data dari database
+$query = "SELECT kode_barang, nama_barang, kondisi, jenis_barang, jumlah, satuan FROM stock_gudang";
 $result = $koneksi->query($query);
 
-// Prepare an array to store the data
-$data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+// Membuat array untuk menyimpan data
+$data = array();
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
 }
 
-// Return data in JSON format
+// Mengembalikan data dalam format JSON
 echo json_encode($data);
+
+// Tutup koneksi
+$koneksi->close();
 ?>

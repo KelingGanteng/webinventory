@@ -71,9 +71,8 @@
                                         class="btn btn-danger btn-sm custom-btn"
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
-                                        <a href="pdf2.php" class="btn btn-warning btn-sm custom-btn">
-                                            <i class="fas fa-file-pdf"></i> Export PDF
-                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-primary" id="export-pdf"
+                                            data-id="ID_Transaksi">Generate Laporan PDF</a>
                                     </a>
                                 </td>
                             </tr>

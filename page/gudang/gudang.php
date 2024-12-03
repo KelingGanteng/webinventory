@@ -55,7 +55,7 @@
                     onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                     <i class="fas fa-trash"></i> Hapus
                   </a>
-                  <a href="report1.php" class="btn btn-warning btn-sm custom-btn">
+                  <a href="pdf1.php" class="btn btn-warning btn-sm custom-btn">
                     <i class="fas fa-file-pdf"></i> Export PDF
                   </a>
                 </td>
