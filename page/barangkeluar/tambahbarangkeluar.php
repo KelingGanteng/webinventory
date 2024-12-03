@@ -129,6 +129,31 @@ $tanggal_keluar = date("Y-m-d");
 						<div class="tampung"></div>
 
 
+						<label for="karyawan">Pilih Karyawan</label>
+						<div class="form-group">
+							<div class="form-line">
+								<select name="karyawan" id="karyawan" class="form-control">
+									<option value="">-- Pilih Karyawan --</option>
+									<?php
+									// Query untuk mengambil data karyawan beserta departemennya
+									$sql_karyawan = $koneksi->query("SELECT dk.id, dk.nama AS nama_karyawan, d.nama AS nama_departemen
+                                              FROM daftar_karyawan dk
+                                              LEFT JOIN departemen d ON dk.departemen_id = d.id
+                                              ORDER BY dk.nama ASC");
+									while ($data_karyawan = $sql_karyawan->fetch_assoc()) {
+										echo "<option value='" . $data_karyawan['id'] . "'>";
+										echo htmlspecialchars($data_karyawan['nama_karyawan']) . " (" . htmlspecialchars($data_karyawan['nama_departemen']) . ")";
+										echo "</option>";
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
+
+
+
+
 						<label for="">Jumlah</label>
 						<div class="form-group">
 							<div class="form-line">
@@ -203,7 +228,8 @@ $tanggal_keluar = date("Y-m-d");
 			if (isset($_POST['simpan'])) {
 				$id_transaksi = $_POST['id_transaksi'];
 				$tanggal = $_POST['tanggal_keluar'];
-
+				$karyawan_id = $_POST['karyawan'];  // Ambil id karyawan yang dipilih
+			
 				// Pisahkan kode barang dan nama barang
 				$barang = $_POST['barang'];
 				$pecah_barang = explode(".", $barang);
@@ -229,8 +255,9 @@ $tanggal_keluar = date("Y-m-d");
 					$total = $stok_tersedia - $jumlah;  // Hitung stok sisa setelah barang keluar
 			
 					// Simpan transaksi barang keluar
-					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan) 
-            VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan')");
+					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan, karyawan_id) 
+					VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan', '$karyawan_id')");
+
 
 					// Update stok di gudang setelah transaksi
 					$sql2 = $koneksi->query("UPDATE gudang SET jumlah = $total WHERE kode_barang = '$kode_barang'");

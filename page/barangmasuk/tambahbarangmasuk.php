@@ -164,6 +164,7 @@ $tanggal_masuk = date("Y-m-d");
 						$nama_barang = $pecah_barang[1];
 						$jumlah = $_POST['jumlahmasuk'];
 						$satuan = $_POST['satuan'];
+						$satuan = $_POST['satuan'];
 						$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
 					
 						// Simpan data barang masuk

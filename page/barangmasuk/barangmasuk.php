@@ -19,6 +19,7 @@
                 </a>
             </div>
 
+            <!-- Filter Tanggal -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="input-group">
@@ -30,20 +31,20 @@
                 </div>
             </div>
 
+            <!-- Tabel Barang Masuk -->
             <div class="table-responsive">
                 <table class="table table-bordered" id="barangmasuk" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Id Transaksi</th>
-                            <th>Tanggal Masuk</th>
-                            <th>Kode Barang</th>
-                            <th>Nama Barang</th>
-                            <th>Kondisi</th>
-                            <th>Jumlah Masuk</th>
-                            <th>Satuan Barang</th>
-                            <th>Total Stok</th>
-                            <th>Pengaturan</th>
+                            <th style="width: 50px; text-align: center;">No</th>
+                            <th style="width: 150px; text-align: center;">Id Transaksi</th>
+                            <th style="width: 150px; text-align: center;">Tanggal Masuk</th>
+                            <th style="width: 150px; text-align: center;">Kode Barang</th>
+                            <th style="width: 200px; text-align: center;">Nama Barang</th>
+                            <th style="width: 100px; text-align: center;">Kondisi</th>
+                            <th style="width: 150px; text-align: center;">Jumlah Masuk</th>
+                            <th style="width: 100px; text-align: center;">Satuan</th>
+                            <th style="width: 200px; text-align: center;">Pengaturan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,26 +54,27 @@
                         while ($data = $sql->fetch_assoc()) {
                             ?>
                             <tr>
-                                <td><?php echo $no++; ?></td>
-                                <td><?php echo $data['id_transaksi'] ?></td>
-                                <td><?php echo $data['tanggal'] ?></td>
-                                <td><?php echo $data['kode_barang'] ?></td>
-                                <td><?php echo $data['nama_barang'] ?></td>
-                                <td><?php echo $data['kondisi'] ?></td>
-                                <td><?php echo $data['jumlah'] ?></td>
-                                <td><?php echo $data['satuan'] ?></td>
-                                <td>isi total stok</td>
-                                <td>
+                                <td style="text-align: center;"><?php echo $no++; ?></td>
+                                <td style="text-align: center;"><?php echo $data['id_transaksi'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['tanggal'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['kode_barang'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['nama_barang'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['kondisi'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['jumlah'] ?></td>
+                                <td style="text-align: center;"><?php echo $data['satuan'] ?></td>
+                                <td style="text-align: center;">
                                     <a href="?page=barangmasuk&aksi=ubahbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-                                        class="btn btn-info btn-sm mb-1 custom-btn">
+                                        class="btn btn-info btn-sm custom-btn">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     <a href="?page=barangmasuk&aksi=hapusbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
                                         class="btn btn-danger btn-sm custom-btn"
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
-                                        <a href="javascript:void(0);" class="btn btn-primary" id="export-pdf"
-                                            data-id="ID_Transaksi">Generate Laporan PDF</a>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm custom-btn" id="export-pdf"
+                                        data-id="ID_Transaksi">
+                                        <i class="fas fa-file-pdf"></i> Generate Laporan PDF
                                     </a>
                                 </td>
                             </tr>

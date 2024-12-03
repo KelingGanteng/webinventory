@@ -2,33 +2,34 @@
 <div class="container-fluid">
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary"> Stok Gudang </h6>
+      <h6 class="m-0 font-weight-bold text-primary">Stok Gudang</h6>
     </div>
     <div class="card-body">
-      <!-- Tambah tombol di atas tabel -->
+      <!-- Tombol Tambah Barang dan Export Table -->
       <div class="mb-3">
         <a href="?page=gudang&aksi=tambahgudang" class="btn btn-primary custom-btn">
-          <i class="fas fa-plus"></i> Tambah Barang
+          <i class="fas fa-plus me-2"></i> Tambah Barang
         </a>
       </div>
       <div class="mb-3">
         <a href="export3.php" class="btn btn-primary custom-btn">
-          <i class="fas fa-download"></i> Export Table
+          <i class="fas fa-download me-2"></i> Export Table
         </a>
       </div>
+
+      <!-- Tabel Data -->
       <div class="table-responsive">
-        <table class="table table-bordered" id="gudang" width="100%" cellspacing="0">
-          <!-- Include DataTables CSS -->
+        <table class="table table-bordered table-striped" id="gudang">
           <thead>
             <tr>
-              <th>No</th>
-              <th>Kode Barang</th>
-              <th>Nama Barang</th>
-              <th>Kondisi</th>
-              <th>Jenis Barang</th>
-              <th>Jumlah</th>
-              <th>Satuan</th>
-              <th>Aksi</th>
+              <th style="width: 50px; text-align: center; vertical-align: middle;">No</th>
+              <th style="width: 200px; text-align: center; vertical-align: middle;">Kode Barang</th>
+              <th style="width: 150px; text-align: center; vertical-align: middle;">Nama Barang</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Kondisi</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Jenis Barang</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Jumlah</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Satuan Barang</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Pengaturan</th>
             </tr>
           </thead>
           <tbody>
@@ -45,9 +46,9 @@
                 <td><?php echo htmlspecialchars($data['jenis_barang']); ?></td>
                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                 <td><?php echo htmlspecialchars($data['satuan']); ?></td>
-                <td>
+                <td class="text-center">
                   <a href="?page=gudang&aksi=ubahgudang&kode_barang=<?php echo $data['kode_barang']; ?>"
-                    class="btn btn-info btn-sm mb-1 custom-btn">
+                    class="btn btn-info btn-sm custom-btn">
                     <i class="fas fa-edit"></i> Edit
                   </a>
                   <a href="?page=gudang&aksi=hapusgudang&kode_barang=<?php echo $data['kode_barang']; ?>"
@@ -133,16 +134,9 @@
   });
 </script>
 
-<?php
-// Query untuk menghitung total jumlah barang
-$sql = $koneksi->query("SELECT SUM(jumlah) AS total_stok FROM gudang");
-$data = $sql->fetch_assoc();
-$total_stok = $data['total_stok'];
-?>
-
 <!-- CSS for Custom Button Styling -->
 <style>
-  /* Custom button styling for "Tambah Barang" and "Export Table" */
+  /* Custom button styling */
   .custom-btn {
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
@@ -151,7 +145,6 @@ $total_stok = $data['total_stok'];
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Button hover effect */
   .custom-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
@@ -162,17 +155,7 @@ $total_stok = $data['total_stok'];
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
   }
 
-  /* Style for the table buttons */
-  .btn-sm {
-    font-size: 0.9rem;
-  }
-
-  /* Button spacing in table */
-  .btn-sm i {
-    margin-right: 5px;
-  }
-
-  /* Buttons for the DataTable */
+  /* DataTable buttons styling */
   .dt-buttons .btn {
     background-color: #007bff;
     color: white;
@@ -192,5 +175,58 @@ $total_stok = $data['total_stok'];
 
   .dt-buttons .btn i {
     margin-right: 5px;
+  }
+
+  /* Table styling */
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  /* Column width */
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 50px;
+  }
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 200px;
+  }
+
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    width: 150px;
+  }
+
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    width: 120px;
+  }
+
+  /* Table header styling */
+  .table thead th {
+    background-color: #f8f9fc;
+    font-weight: bold;
+  }
+
+  /* Pagination button styling */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #0056b3;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    font-size: 0.875rem;
+    color: #6c757d;
   }
 </style>

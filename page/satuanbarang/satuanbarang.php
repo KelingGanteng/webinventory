@@ -12,16 +12,17 @@
         </a>
       </div>
 
+      <!-- Tabel Data -->
       <div class="table-responsive">
-        <table class="table table-bordered" id="satuanbarang" width="100%" cellspacing="0">
-          <!-- Include DataTables CSS -->
+        <table class="table table-bordered table-striped" id="jenis_barang">
           <thead>
             <tr>
-              <th>No</th>
-              <th>Satuan Barang</th>
-              <th>Aksi</th>
+              <th style="width: 50px; text-align: center; vertical-align: middle;">No</th>
+              <th style="width: 200px; text-align: center; vertical-align: middle;">Satuan Barang</th>
+              <th style="width: 120px; text-align: center; vertical-align: middle;">Pengaturan</th>
             </tr>
           </thead>
+          <tbody>
           <tbody>
             <?php
             $no = 1; // Inisialisasi nomor urut
@@ -105,7 +106,7 @@
 
 <!-- CSS for Custom Button Styling -->
 <style>
-  /* Custom button styling for "Tambah Barang" */
+  /* Custom button styling */
   .custom-btn {
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
@@ -114,7 +115,6 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Button hover effect */
   .custom-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
@@ -125,17 +125,7 @@
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
   }
 
-  /* Style for the table buttons */
-  .btn-sm {
-    font-size: 0.9rem;
-  }
-
-  /* Button spacing in table */
-  .btn-sm i {
-    margin-right: 5px;
-  }
-
-  /* Buttons for the DataTable */
+  /* DataTable buttons styling */
   .dt-buttons .btn {
     background-color: #007bff;
     color: white;
@@ -156,8 +146,60 @@
   .dt-buttons .btn i {
     margin-right: 5px;
   }
-</style>
 
+  /* Table styling */
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  /* Column width */
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 50px;
+  }
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 200px;
+  }
+
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    width: 150px;
+  }
+
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    width: 120px;
+  }
+
+  /* Table header styling */
+  .table thead th {
+    background-color: #f8f9fc;
+    font-weight: bold;
+  }
+
+  /* Pagination button styling */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #0056b3;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+</style>
 <!-- Tooltip Initialization (Bootstrap 5) -->
 <script>
   var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

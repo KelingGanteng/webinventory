@@ -2,7 +2,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary"> Barang Retur </h6>
+            <h6 class="m-0 font-weight-bold text-primary">Barang Retur</h6>
         </div>
         <div class="card-body">
             <!-- Tambah tombol di atas tabel -->
@@ -11,11 +11,13 @@
                     <i class="fas fa-plus me-2"></i> Tambah Barang
                 </a>
             </div>
+            <!-- Export tombol untuk ekspor tabel -->
             <div class="mb-3">
                 <a href="export4.php" class="btn btn-primary custom-btn">
                     <i class="fas fa-download me-2"></i> Export Table
                 </a>
             </div>
+            <!-- Tabel untuk Barang Retur -->
             <div class="table-responsive">
                 <table class="table table-bordered" id="barangretur" width="100%" cellspacing="0">
                     <thead>
@@ -68,7 +70,7 @@
     </div>
 </div>
 
-<!-- Include DataTables JS -->
+<!-- Include DataTables JS and dependencies -->
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
@@ -166,6 +168,45 @@
 
     /* Button icon spacing */
     .custom-btn i {
+        margin-right: 5px;
+    }
+
+    /* Styling for table */
+    .table th,
+    .table td {
+        padding: 12px;
+        /* Larger padding for readability */
+        text-align: center;
+        /* Align text to center */
+        vertical-align: middle;
+        /* Center vertically */
+    }
+
+    /* Table header styling */
+    .table thead th {
+        background-color: #f8f9fc;
+        font-weight: bold;
+    }
+
+    /* DataTable Button Styling */
+    .dt-buttons .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 0.875rem;
+        padding: 5px 10px;
+        margin: 0 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .dt-buttons .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .dt-buttons .btn i {
         margin-right: 5px;
     }
 </style>

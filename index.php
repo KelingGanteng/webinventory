@@ -96,18 +96,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         $data = $sql->get_result()->fetch_assoc();
       }
 
-      // ... existing code ...
-      
       ?>
-
-
-
-      <!--sidebar start-->
-
-
-
-
-
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
@@ -136,6 +125,8 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             <a class="collapse-item" href="?page=jenisbarang">Jenis Barang</a>
             <a class="collapse-item" href="?page=satuanbarang">Satuan Barang</a>
             <a class="collapse-item" href="?page=gudang">Data Barang</a>
+            <a class="collapse-item" href="?page=daftarkaryawan">Daftar Karyawan</a>
+            <a class="collapse-item" href="?page=departemen">Departement</a>
             <!--<a class="collapse-item" href="?page=supplier">Data Supplier</a> -->>
 
           </div>
@@ -325,6 +316,38 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
               if ($aksi == "hapusbarangretur") {
                 include "page/barangretur/hapusbarangretur.php";
+              }
+            }
+
+            if ($page == "daftarkaryawan") {
+              if ($aksi == "") {
+                include "page/daftarkaryawan/daftarkaryawan.php";
+              }
+              if ($aksi == "tambahdaftarkaryawan") {
+                include "page/daftarkaryawan/tambahdaftarkaryawan.php";
+              }
+              if ($aksi == "ubahdaftarkaryawan") {
+                include "page/daftarkaryawan/ubahdaftarkaryawan.php";
+              }
+
+              if ($aksi == "hapusdaftarkaryawan") {
+                include "page/daftarkaryawan/hapusdaftarkaryawan.php";
+              }
+            }
+
+            if ($page == "departemen") {
+              if ($aksi == "") {
+                include "page/departemen/departemen.php";
+              }
+              if ($aksi == "tambahdepartemen") {
+                include "page/departemen/tambahdepartemen.php";
+              }
+              if ($aksi == "ubahdepartemen") {
+                include "page/departemen/ubahdepartemen.php";
+              }
+
+              if ($aksi == "hapusdepartemen") {
+                include "page/departemen/hapusdepartemen.php";
               }
             }
 

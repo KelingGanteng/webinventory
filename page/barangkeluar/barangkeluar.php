@@ -33,47 +33,52 @@
 
 			<!-- Tabel Barang Keluar -->
 			<div class="table-responsive">
-				<table class="table table-bordered" id="barangkeluar" width="100%" cellspacing="0">
+				<table class="table table-borderedtable-striped" id="barangkeluar">
 					<thead>
 						<tr>
-							<th>No</th>
-							<th>Id Transaksi</th>
-							<th>Tanggal Keluar</th>
-							<th>Kode Barang</th>
-							<th>Nama Barang</th>
-							<th>Kondisi</th>
-							<th>Jumlah Keluar</th>
-							<th>Satuan</th>
-							<th>Pengaturan</th>
+							<th style="width: 50px; text-align: center; vertical-align: middle;">No</th>
+							<th style="width: 150px; text-align: center; vertical-align: middle;">Id Transaksi</th>
+							<th style="width: 150px; text-align: center; vertical-align: middle;">Tanggal Keluar</th>
+							<th style="width: 150px; text-align: center; vertical-align: middle;">Kode Barang</th>
+							<th style="width: 200px; text-align: center; vertical-align: middle;">Nama Barang</th>
+							<th style="width: 100px; text-align: center; vertical-align: middle;">Kondisi</th>
+							<th style="width: 150px; text-align: center; vertical-align: middle;">Jumlah Keluar</th>
+							<th style="width: 100px; text-align: center; vertical-align: middle;">Satuan</th>
+							<th style="width: 100px; text-align: center; vertical-align: middle;">Daftar Karyawan</th>
+							<th style="width: 150px; text-align: center; vertical-align: middle;">Pengaturan</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 						$no = 1;
-						$sql = $koneksi->query("SELECT barang_keluar.*, gudang.satuan FROM barang_keluar INNER JOIN gudang ON barang_keluar.kode_barang = gudang.kode_barang");
+						$sql = $koneksi->query("SELECT barang_keluar.*, gudang.satuan, daftar_karyawan.nama AS nama_karyawan 
+                        FROM barang_keluar 
+                        INNER JOIN gudang ON barang_keluar.kode_barang = gudang.kode_barang
+                        LEFT JOIN daftar_karyawan ON barang_keluar.karyawan_id = daftar_karyawan.id");
 						while ($data = $sql->fetch_assoc()) {
 							?>
 							<tr>
-								<td><?php echo $no++; ?></td>
-								<td><?php echo $data['id_transaksi']; ?></td>
-								<td><?php echo $data['tanggal']; ?></td>
-								<td><?php echo $data['kode_barang']; ?></td>
-								<td><?php echo $data['nama_barang']; ?></td>
-								<td><?php echo $data['kondisi']; ?></td>
-								<td><?php echo $data['jumlah']; ?></td>
-								<td><?php echo $data['satuan']; ?></td>
-								<td>
+								<td style="text-align: center;"><?php echo $no++; ?></td>
+								<td style="text-align: center;"><?php echo $data['id_transaksi']; ?></td>
+								<td style="text-align: center;"><?php echo $data['tanggal']; ?></td>
+								<td style="text-align: center;"><?php echo $data['kode_barang']; ?></td>
+								<td style="text-align: center;"><?php echo $data['nama_barang']; ?></td>
+								<td style="text-align: center;"><?php echo $data['kondisi']; ?></td>
+								<td style="text-align: center;"><?php echo $data['jumlah']; ?></td>
+								<td style="text-align: center;"><?php echo $data['satuan']; ?></td>
+								<td style="text-align: center;"><?php echo $data['nama_karyawan']; ?></td>
+								<td style="text-align: center;">
 									<a href="?page=barangkeluar&aksi=ubahbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-										class="btn btn-info btn-sm mb-1 custom-btn">
+										class="btn btn-info btn-sm custom-btn">
 										<i class="fas fa-edit"></i> Edit
 									</a>
 									<a href="?page=barangkeluar&aksi=hapusbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
 										class="btn btn-danger btn-sm custom-btn"
 										onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
 										<i class="fas fa-trash"></i> Hapus
-										<a href="pdf3.php" class="btn btn-warning btn-sm custom-btn">
-											<i class="fas fa-file-pdf"></i> Export PDF
-										</a>
+									</a>
+									<a href="pdf3.php" class="btn btn-warning btn-sm custom-btn">
+										<i class="fas fa-file-pdf"></i> Export PDF
 									</a>
 								</td>
 							</tr>
