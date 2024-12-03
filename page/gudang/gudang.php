@@ -7,13 +7,13 @@
     <div class="card-body">
       <!-- Tambah tombol di atas tabel -->
       <div class="mb-3">
-        <a href="?page=gudang&aksi=tambahgudang" class="btn btn-primary">
+        <a href="?page=gudang&aksi=tambahgudang" class="btn btn-primary custom-btn">
           <i class="fas fa-plus"></i> Tambah Barang
         </a>
       </div>
       <div class="mb-3">
-        <a href="export3.php" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Export Table
+        <a href="export3.php" class="btn btn-primary custom-btn">
+          <i class="fas fa-download"></i> Export Table
         </a>
       </div>
       <div class="table-responsive">
@@ -45,16 +45,18 @@
                 <td><?php echo htmlspecialchars($data['jenis_barang']); ?></td>
                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                 <td><?php echo htmlspecialchars($data['satuan']); ?></td>
-                <!-- Ubah bagian tombol hapus di dalam loop while -->
                 <td>
                   <a href="?page=gudang&aksi=ubahgudang&kode_barang=<?php echo $data['kode_barang']; ?>"
-                    class="btn btn-info btn-sm mb-1">
+                    class="btn btn-info btn-sm mb-1 custom-btn">
                     <i class="fas fa-edit"></i> Edit
                   </a>
-                  <!-- Setelah -->
                   <a href="?page=gudang&aksi=hapusgudang&kode_barang=<?php echo $data['kode_barang']; ?>"
-                    class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
+                    class="btn btn-danger btn-sm custom-btn"
+                    onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                     <i class="fas fa-trash"></i> Hapus
+                  </a>
+                  <a href="pdf1.php" class="btn btn-warning btn-sm custom-btn">
+                    <i class="fas fa-file-pdf"></i> Export PDF
                   </a>
                 </td>
               </tr>
@@ -81,7 +83,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
   $(document).ready(function () {
     $('#gudang').DataTable({
       dom: 'Bfrtip',
@@ -89,27 +90,27 @@
         {
           extend: 'copy',
           text: '<i class="fas fa-copy"></i> Copy',
-          className: 'btn btn-secondary btn-sm'
+          className: 'btn btn-secondary btn-sm custom-btn'
         },
         {
           extend: 'csv',
           text: '<i class="fas fa-file-csv"></i> CSV',
-          className: 'btn btn-secondary btn-sm'
+          className: 'btn btn-secondary btn-sm custom-btn'
         },
         {
           extend: 'excel',
           text: '<i class="fas fa-file-excel"></i> Excel',
-          className: 'btn btn-secondary btn-sm'
+          className: 'btn btn-secondary btn-sm custom-btn'
         },
         {
           extend: 'pdf',
           text: '<i class="fas fa-file-pdf"></i> PDF',
-          className: 'btn btn-secondary btn-sm'
+          className: 'btn btn-secondary btn-sm custom-btn'
         },
         {
           extend: 'print',
           text: '<i class="fas fa-print"></i> Print',
-          className: 'btn btn-secondary btn-sm'
+          className: 'btn btn-secondary btn-sm custom-btn'
         }
       ],
       language: {
@@ -138,3 +139,58 @@ $sql = $koneksi->query("SELECT SUM(jumlah) AS total_stok FROM gudang");
 $data = $sql->fetch_assoc();
 $total_stok = $data['total_stok'];
 ?>
+
+<!-- CSS for Custom Button Styling -->
+<style>
+  /* Custom button styling for "Tambah Barang" and "Export Table" */
+  .custom-btn {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Button hover effect */
+  .custom-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .custom-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  }
+
+  /* Style for the table buttons */
+  .btn-sm {
+    font-size: 0.9rem;
+  }
+
+  /* Button spacing in table */
+  .btn-sm i {
+    margin-right: 5px;
+  }
+
+  /* Buttons for the DataTable */
+  .dt-buttons .btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 0.875rem;
+    padding: 5px 10px;
+    margin: 0 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .dt-buttons .btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .dt-buttons .btn i {
+    margin-right: 5px;
+  }
+</style>

@@ -114,20 +114,14 @@ $tanggal_masuk = date("Y-m-d");
 						</div>
 
 						<div class="tampung"></div>
-
-						<label for="">Kondisi</label>
+						<label for="kondisi">Kondisi</label>
 						<div class="form-group">
 							<div class="form-line">
-								<div class="checkbox-list">
-									<?php
-									// Daftar kondisi barang yang bisa dipilih
-									$kondisi_options = ['Baik', 'Rusak', 'bekas']; // Misalnya, daftar kondisi barang
-									foreach ($kondisi_options as $kondisi) {
-										echo "<label class='checkbox-inline'>
-                        			<input type='checkbox' name='kondisi[]' value='" . $kondisi . "' /> " . $kondisi . "
-                      				</label>&nbsp;&nbsp;";
-									}
-									?>
+								<!-- Menampilkan checkbox dalam format sederhana -->
+								<div class="checkbox-group">
+									<label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
+									<label><input type="checkbox" name="kondisi[]" value="Rusak" /> Rusak</label>
+									<label><input type="checkbox" name="kondisi[]" value="Bekas" /> Bekas</label>
 								</div>
 							</div>
 						</div>
@@ -170,10 +164,11 @@ $tanggal_masuk = date("Y-m-d");
 						$nama_barang = $pecah_barang[1];
 						$jumlah = $_POST['jumlahmasuk'];
 						$satuan = $_POST['satuan'];
-
+						$kondisi = isset($_POST['kondisi']) ? implode(", ", $_POST['kondisi']) : ''; // Gabungkan kondisi yang dipilih dengan koma
+					
 						// Simpan data barang masuk
-						$sql = $koneksi->query("INSERT INTO barang_masuk (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, satuan) 
-                                            VALUES ('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$satuan')");
+						$sql = $koneksi->query("INSERT INTO barang_masuk (id_transaksi, tanggal, kode_barang, nama_barang, jumlah, satuan, kondisi) 
+                                            VALUES ('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$jumlah', '$satuan', '$kondisi')");
 						if ($sql) {
 							echo "<script>alert('Data berhasil disimpan!'); window.location.href='?page=barangmasuk';</script>";
 						} else {

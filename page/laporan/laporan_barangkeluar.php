@@ -130,8 +130,6 @@
                   <td><?php echo $data['kode_barang'] ?></td>
                   <td><?php echo $data['nama_barang'] ?></td>
                   <td><?php echo $data['jumlah'] ?></td>
-                  <td><?php echo $data['tujuan'] ?></td>
-
                 </tr>
               <?php } ?>
 

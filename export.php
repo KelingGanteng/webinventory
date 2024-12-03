@@ -32,6 +32,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
                         <th>Tanggal Masuk</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
+                        <th>Kondisi</th>
                         <th>Jumlah Masuk</th> <!-- Hapus kolom Pengirim -->
                         <th>Satuan Barang</th>
                     </tr>
@@ -51,6 +52,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
                             <td><?php echo $data['tanggal'] ?></td>
                             <td><?php echo $data['kode_barang'] ?></td>
                             <td><?php echo $data['nama_barang'] ?></td>
+                            <td><?php echo $data['kondisi'] ?></td>
                             <td><?php echo $data['jumlah'] ?></td> <!-- Hapus kolom Pengirim -->
                             <td><?php echo $data['satuan'] ?></td>
 

@@ -7,18 +7,17 @@
         <div class="card-body">
             <!-- Tambah tombol di atas tabel -->
             <div class="mb-3">
-                <a href="?page=barangretur&aksi=tambahbarangretur" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Barang
+                <a href="?page=barangretur&aksi=tambahbarangretur" class="btn btn-primary custom-btn">
+                    <i class="fas fa-plus me-2"></i> Tambah Barang
                 </a>
             </div>
             <div class="mb-3">
-                <a href="export4.php" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Export Table
+                <a href="export4.php" class="btn btn-primary custom-btn">
+                    <i class="fas fa-download me-2"></i> Export Table
                 </a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="barangretur" width="100%" cellspacing="0">
-                    <!-- Include DataTables CSS -->
                     <thead>
                         <tr>
                             <th>No</th>
@@ -47,14 +46,17 @@
                                 <td><?php echo htmlspecialchars($data['kondisi']); ?></td>
                                 <td><?php echo htmlspecialchars($data['kerusakan']); ?></td>
                                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
-                                <!-- Ubah bagian tombol hapus di dalam loop while -->
+                                <!-- Tombol Hapus dan Export PDF -->
                                 <td>
-
-                                    <!-- Setelah -->
                                     <a href="?page=barangretur&aksi=hapusbarangretur&id_retur=<?php echo $data['id_retur']; ?>"
-                                        class="btn btn-danger btn-sm"
+                                        class="btn btn-danger btn-sm custom-btn"
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
+                                    </a>
+                                    <a href="pdf4.php?id_retur=<?php echo $data['id_retur']; ?>"
+                                        class="btn btn-warning btn-sm custom-btn" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i> Export PDF
                                     </a>
                                 </td>
                             </tr>
@@ -81,7 +83,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
     $(document).ready(function () {
         $('#barangretur').DataTable({
             dom: 'Bfrtip',
@@ -126,8 +127,45 @@
                     previous: "Sebelumnya"
                 }
             },
-            order: [[1, 'asc']], // Urutkan berdasarkan kode barang
+            order: [[1, 'asc']], // Urutkan berdasarkan ID Retur
             pageLength: 10 // Jumlah data per halaman
         });
     });
 </script>
+
+<!-- Tooltip Initialization (Bootstrap 5) -->
+<script>
+    var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+<!-- Additional Styles for Custom Buttons -->
+<style>
+    /* Custom button styling */
+    .custom-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Button hover effect */
+    .custom-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Button focus effect */
+    .custom-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+
+    /* Button icon spacing */
+    .custom-btn i {
+        margin-right: 5px;
+    }
+</style>

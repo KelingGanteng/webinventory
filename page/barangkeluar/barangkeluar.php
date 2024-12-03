@@ -5,29 +5,33 @@
 			<h6 class="m-0 font-weight-bold text-primary">Barang Keluar</h6>
 		</div>
 		<div class="card-body">
-			<!-- Tambah tombol di atas tabel -->
+			<!-- Tombol Tambah Barang -->
 			<div class="mb-3">
-				<a href="?page=barangkeluar&aksi=tambahbarangkeluar" class="btn btn-primary">
-					<i class="fas fa-plus"></i> Tambah Barang
+				<a href="?page=barangkeluar&aksi=tambahbarangkeluar" class="btn btn-primary custom-btn">
+					<i class="fas fa-plus me-2"></i> Tambah Barang
 				</a>
 			</div>
+			<!-- Tombol Export Table -->
 			<div class="mb-3">
-				<a href="export2.php" class="btn btn-primary">
-					<i class="fas fa-plus"></i> Export Table
+				<a href="export2.php" class="btn btn-success custom-btn" data-bs-toggle="tooltip"
+					data-bs-placement="top" title="Export Table">
+					<i class="fas fa-download me-2"></i> Export Table
 				</a>
 			</div>
 
+			<!-- Filter tanggal -->
 			<div class="row mb-3">
 				<div class="col-md-6">
 					<div class="input-group">
-						<span class="input-group-text">Dari</span>
+						<span class="input-group-text"><i class="fas fa-calendar-alt"></i> Dari</span>
 						<input type="date" id="min" name="min" class="form-control">
-						<span class="input-group-text">Sampai</span>
+						<span class="input-group-text"><i class="fas fa-calendar-alt"></i> Sampai</span>
 						<input type="date" id="max" name="max" class="form-control">
 					</div>
 				</div>
 			</div>
 
+			<!-- Tabel Barang Keluar -->
 			<div class="table-responsive">
 				<table class="table table-bordered" id="barangkeluar" width="100%" cellspacing="0">
 					<thead>
@@ -43,11 +47,9 @@
 							<th>Pengaturan</th>
 						</tr>
 					</thead>
-
 					<tbody>
 						<?php
 						$no = 1;
-						// Query dengan JOIN untuk mendapatkan data satuan dari tabel gudang
 						$sql = $koneksi->query("SELECT barang_keluar.*, gudang.satuan FROM barang_keluar INNER JOIN gudang ON barang_keluar.kode_barang = gudang.kode_barang");
 						while ($data = $sql->fetch_assoc()) {
 							?>
@@ -59,17 +61,20 @@
 								<td><?php echo $data['nama_barang']; ?></td>
 								<td><?php echo $data['kondisi']; ?></td>
 								<td><?php echo $data['jumlah']; ?></td>
-								<td><?php echo $data['satuan']; ?></td> <!-- Menampilkan satuan dari tabel gudang -->
+								<td><?php echo $data['satuan']; ?></td>
 								<td>
 									<a href="?page=barangkeluar&aksi=ubahbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-										class="btn btn-info btn-sm mb-1">
+										class="btn btn-info btn-sm mb-1 custom-btn">
 										<i class="fas fa-edit"></i> Edit
 									</a>
-									<!-- Setelah -->
 									<a href="?page=barangkeluar&aksi=hapusbarangkeluar&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-										class="btn btn-danger btn-sm"
+										class="btn btn-danger btn-sm custom-btn"
 										onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
 										<i class="fas fa-trash"></i> Hapus
+										<a href="pdf3.php" class="btn btn-warning btn-sm custom-btn">
+											<i class="fas fa-file-pdf"></i> Export PDF
+										</a>
+									</a>
 								</td>
 							</tr>
 						<?php } ?>
@@ -80,6 +85,7 @@
 	</div>
 </div>
 
+<!-- JavaScript untuk DataTable dan Filter Tanggal -->
 <script>
 	$(document).ready(function () {
 		var table = $('#barangkeluar').DataTable({
@@ -132,7 +138,7 @@
 			function (settings, data, dataIndex) {
 				var min = $('#min').val();
 				var max = $('#max').val();
-				var date = data[2];
+				var date = data[2]; // Kolom Tanggal Keluar
 
 				if (min === "" && max === "") return true;
 				if (min === "") return date <= max;
@@ -145,13 +151,73 @@
 			table.draw();
 		});
 	});
-
-
-
-
 </script>
 
+<!-- Additional Styles -->
+<style>
+	/* Custom button styling */
+	.custom-btn {
+		background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+		color: white;
+		border: none;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
 
-<head>
+	/* Button hover effect */
+	.custom-btn:hover {
+		transform: scale(1.05);
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+	}
 
-</head>
+	/* Button focus effect */
+	.custom-btn:focus {
+		outline: none;
+		box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+	}
+
+	/* Tooltip */
+	.custom-btn[data-bs-toggle="tooltip"] {
+		position: relative;
+	}
+
+	/* Style for the table buttons */
+	.btn-sm {
+		font-size: 0.9rem;
+	}
+
+	/* Button spacing in table */
+	.btn-sm i {
+		margin-right: 5px;
+	}
+
+	/* Buttons for the DataTable */
+	.dt-buttons .btn {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		font-size: 0.875rem;
+		padding: 5px 10px;
+		margin: 0 5px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		transition: all 0.3s ease;
+	}
+
+	.dt-buttons .btn:hover {
+		background-color: #0056b3;
+		transform: scale(1.05);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	.dt-buttons .btn i {
+		margin-right: 5px;
+	}
+</style>
+
+<!-- Tooltip Initialization (Bootstrap 5) -->
+<script>
+	var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+		return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
+</script>

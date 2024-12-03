@@ -84,7 +84,7 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                             <label><input type="checkbox" name="kondisi[]" value="Baik" /> Baik</label>
                             <label><input type="checkbox" name="kondisi[]" value="Rusak" id="checkbox_rusak" />
                                 Rusak</label>
-                            <label><input type="checkbox" name="kondisi[]" value="Retur" /> Retur</label>
+                            <label><input type="checkbox" name="kondisi[]" value="Bekas" /> Bekas</label>
                         </div>
                     </div>
 

@@ -7,8 +7,8 @@
     <div class="card-body">
       <!-- Tambah tombol di atas tabel -->
       <div class="mb-3">
-        <a href="?page=jenisbarang&aksi=tambahjenis" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Tambah Barang
+        <a href="?page=jenisbarang&aksi=tambahjenis" class="btn btn-primary custom-btn">
+          <i class="fas fa-plus me-2"></i> Tambah Barang
         </a>
       </div>
 
@@ -35,10 +35,12 @@
                 <td><?php echo htmlspecialchars($data['jenis_barang']); ?></td>
                 <td>
                   <!-- Tambah tombol edit & hapus -->
-                  <a href="?page=jenisbarang&aksi=ubahjenis&id=<?php echo $data['id']; ?>" class="btn btn-info btn-sm">
+                  <a href="?page=jenisbarang&aksi=ubahjenis&id=<?php echo $data['id']; ?>"
+                    class="btn btn-info btn-sm custom-btn">
                     <i class="fas fa-edit"></i> Edit
                   </a>
-                  <a href="?page=jenisbarang&aksi=hapusjenis&id=<?php echo $data['id']; ?>" class="btn btn-danger btn-sm"
+                  <a href="?page=jenisbarang&aksi=hapusjenis&id=<?php echo $data['id']; ?>"
+                    class="btn btn-danger btn-sm custom-btn"
                     onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                     <i class="fas fa-trash"></i> Hapus
                   </a>
@@ -47,11 +49,9 @@
             <?php } ?>
           </tbody>
         </table>
-        </a>
       </div>
 
       <script>
-
         $(document).ready(function () {
           $('#jenis_barang').DataTable({
             dom: 'Bfrtip',
@@ -101,3 +101,69 @@
           });
         });
       </script>
+    </div>
+  </div>
+</div>
+
+<!-- CSS for Custom Button Styling -->
+<style>
+  /* Custom button styling for "Tambah Barang" */
+  .custom-btn {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Button hover effect */
+  .custom-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .custom-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  }
+
+  /* Style for the table buttons */
+  .btn-sm {
+    font-size: 0.9rem;
+  }
+
+  /* Button spacing in table */
+  .btn-sm i {
+    margin-right: 5px;
+  }
+
+  /* Buttons for the DataTable */
+  .dt-buttons .btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 0.875rem;
+    padding: 5px 10px;
+    margin: 0 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .dt-buttons .btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .dt-buttons .btn i {
+    margin-right: 5px;
+  }
+</style>
+
+<!-- Tooltip Initialization (Bootstrap 5) -->
+<script>
+  var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+</script>

@@ -5,15 +5,17 @@
             <h6 class="m-0 font-weight-bold text-primary">Barang Masuk</h6>
         </div>
         <div class="card-body">
-            <!-- Tambah tombol di atas tabel -->
+            <!-- Tombol Tambah Barang -->
             <div class="mb-3">
-                <a href="?page=barangmasuk&aksi=tambahbarangmasuk" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Barang
+                <a href="?page=barangmasuk&aksi=tambahbarangmasuk" class="btn btn-primary custom-btn">
+                    <i class="fas fa-plus me-2"></i> Tambah Barang
                 </a>
             </div>
+            <!-- Tombol Export Table -->
             <div class="mb-3">
-                <a href="export.php" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Export Table
+                <a href="export.php" class="btn btn-success custom-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Export Table">
+                    <i class="fas fa-download me-2"></i> Export Table
                 </a>
             </div>
 
@@ -38,21 +40,17 @@
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
                             <th>Kondisi</th>
-                            <th>Jumlah Masuk</th> <!-- Hapus kolom Pengirim -->
+                            <th>Jumlah Masuk</th>
                             <th>Satuan Barang</th>
                             <th>Total Stok</th>
                             <th>Pengaturan</th>
                         </tr>
                     </thead>
-
-
-
                     <tbody>
                         <?php
                         $no = 1;
                         $sql = $koneksi->query("SELECT * FROM barang_masuk");
                         while ($data = $sql->fetch_assoc()) {
-
                             ?>
                             <tr>
                                 <td><?php echo $no++; ?></td>
@@ -66,28 +64,97 @@
                                 <td>isi total stok</td>
                                 <td>
                                     <a href="?page=barangmasuk&aksi=ubahbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-                                        class="btn btn-info btn-sm mb-1">
+                                        class="btn btn-info btn-sm mb-1 custom-btn">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <!-- Setelah -->
                                     <a href="?page=barangmasuk&aksi=hapusbarangmasuk&id_transaksi=<?php echo $data['id_transaksi']; ?>"
-                                        class="btn btn-danger btn-sm"
+                                        class="btn btn-danger btn-sm custom-btn"
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
+                                        <a href="pdf2.php" class="btn btn-warning btn-sm custom-btn">
+                                            <i class="fas fa-file-pdf"></i> Export PDF
+                                        </a>
+                                    </a>
                                 </td>
                             </tr>
                         <?php } ?>
                     </tbody>
-
-                </table>
-                </tbody>
                 </table>
             </div>
         </div>
     </div>
-
 </div>
 
+<!-- CSS for Custom Button Styling -->
+<style>
+    /* Custom button styling */
+    .custom-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Button hover effect */
+    .custom-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Button focus effect */
+    .custom-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+
+    /* Tooltip */
+    .custom-btn[data-bs-toggle="tooltip"] {
+        position: relative;
+    }
+
+    /* Style for the table buttons */
+    .btn-sm {
+        font-size: 0.9rem;
+    }
+
+    /* Button spacing in table */
+    .btn-sm i {
+        margin-right: 5px;
+    }
+
+    /* Buttons for the DataTable */
+    .dt-buttons .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 0.875rem;
+        padding: 5px 10px;
+        margin: 0 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .dt-buttons .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .dt-buttons .btn i {
+        margin-right: 5px;
+    }
+</style>
+
+<!-- Tooltip Initialization (Bootstrap 5) -->
+<script>
+    var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+<!-- DataTable Initialization Script -->
 <script>
     $(document).ready(function () {
         var table = $('#barangmasuk').DataTable({
