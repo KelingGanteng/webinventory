@@ -11,13 +11,6 @@
                     <i class="fas fa-plus me-2"></i> Tambah Barang
                 </a>
             </div>
-            <!-- Tombol Export Table -->
-            <div class="mb-3">
-                <a href="export.php" class="btn btn-success custom-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Export Table">
-                    <i class="fas fa-download me-2"></i> Export Table
-                </a>
-            </div>
 
             <!-- Filter Tanggal -->
             <div class="row mb-3">
@@ -72,10 +65,7 @@
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
                                     </a>
-                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm custom-btn" id="export-pdf"
-                                        data-id="ID_Transaksi">
-                                        <i class="fas fa-file-pdf"></i> Generate Laporan PDF
-                                    </a>
+
                                 </td>
                             </tr>
                         <?php } ?>

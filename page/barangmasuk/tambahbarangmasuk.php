@@ -48,11 +48,11 @@ $bulan = date("m");
 $tahun = date("y");
 
 if (strlen($tambah) == 1) {
-	$format = "TRM-" . $bulan . $tahun . "00" . $tambah;
+	$format = "MIS-" . $bulan . $tahun . "00" . $tambah;
 } else if (strlen($tambah) == 2) {
-	$format = "TRM-" . $bulan . $tahun . "0" . $tambah;
+	$format = "MIS-" . $bulan . $tahun . "0" . $tambah;
 } else {
-	$format = "TRM-" . $bulan . $tahun . $tambah;
+	$format = "MIS-" . $bulan . $tahun . $tambah;
 }
 
 // Tanggal masuk

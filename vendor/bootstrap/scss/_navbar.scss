@@ -9,14 +9,14 @@
 // Navbar position
 // Navbar themes
 
+
 // Navbar
 //
 // Provide a static navbar from which we expand to create full-width, fixed, and
 // other navbar variations.
 
 .navbar {
-  position: sticky;
-  top: 0;
+  position: relative;
   display: flex;
   flex-wrap: wrap; // allow us to do the line break for collapsing content
   align-items: center;
@@ -33,6 +33,7 @@
     justify-content: space-between;
   }
 }
+
 
 // Navbar brand
 //
@@ -51,6 +52,7 @@
     text-decoration: none;
   }
 }
+
 
 // Navbar nav
 //
@@ -74,6 +76,7 @@
   }
 }
 
+
 // Navbar text
 //
 //
@@ -83,6 +86,7 @@
   padding-top: $nav-link-padding-y;
   padding-bottom: $nav-link-padding-y;
 }
+
 
 // Responsive navbar
 //
@@ -179,6 +183,7 @@
     }
   }
 }
+
 
 // Navbar themes
 //

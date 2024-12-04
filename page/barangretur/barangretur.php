@@ -11,32 +11,38 @@
                     <i class="fas fa-plus me-2"></i> Tambah Barang
                 </a>
             </div>
-            <!-- Export tombol untuk ekspor tabel -->
-            <div class="mb-3">
-                <a href="export4.php" class="btn btn-primary custom-btn">
-                    <i class="fas fa-download me-2"></i> Export Table
-                </a>
-            </div>
+
             <!-- Tabel untuk Barang Retur -->
             <div class="table-responsive">
                 <table class="table table-bordered" id="barangretur" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>ID Retur</th>
-                            <th>Tanggal Retur</th>
-                            <th>Kode Barang</th>
-                            <th>Nama Barang</th>
-                            <th>Kondisi</th>
-                            <th>Kerusakan</th>
-                            <th>Jumlah Retur</th>
-                            <th>Aksi</th>
+                            <th style="width: 50px; text-align: center; vertical-align: middle;">No</th>
+                            <th style="width: 150px; text-align: center; vertical-align: middle;">ID Retur</th>
+                            <th style="width: 150px; text-align: center; vertical-align: middle;">Tanggal Retur</th>
+                            <th style="width: 150px; text-align: center; vertical-align: middle;">Kode Barang</th>
+                            <th style="width: 200px; text-align: center; vertical-align: middle;">Nama Barang</th>
+                            <th style="width: 100px; text-align: center; vertical-align: middle;">Kondisi</th>
+                            <th style="width: 150px; text-align: center; vertical-align: middle;">Kerusakan</th>
+                            <th style="width: 100px; text-align: center; vertical-align: middle;">Jumlah Retur</th>
+                            <th style="width: 100px; text-align: center; vertical-align: middle;">Nama Karyawan</th>
+                            <th style="width: 100px; text-align: center; vertical-align: middle;">Departemen</th>
+                            <th style="width: 100px; text-align: center; vertical-align: middle;">Pengaturan</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $no = 1;
-                        $sql = $koneksi->query("SELECT * FROM barang_retur ORDER BY id_retur");
+                        $sql = $koneksi->query("
+                        SELECT barang_retur.*, 
+                               gudang.satuan, 
+                               daftar_karyawan.nama AS nama_karyawan, 
+                               departemen.nama AS nama_departemen
+                        FROM barang_retur
+                        INNER JOIN gudang ON barang_retur.kode_barang = gudang.kode_barang
+                        LEFT JOIN daftar_karyawan ON barang_retur.karyawan_id = daftar_karyawan.id
+                        LEFT JOIN departemen ON daftar_karyawan.departemen_id = departemen.id
+                    ");
                         while ($data = $sql->fetch_assoc()) {
                             ?>
                             <tr>
@@ -48,18 +54,20 @@
                                 <td><?php echo htmlspecialchars($data['kondisi']); ?></td>
                                 <td><?php echo htmlspecialchars($data['kerusakan']); ?></td>
                                 <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
+                                <td><?php echo htmlspecialchars($data['nama_karyawan']); ?></td>
+                                <td><?php echo htmlspecialchars($data['nama_departemen']); ?></td>
                                 <!-- Tombol Hapus dan Export PDF -->
                                 <td>
+                                    <a href="?page=barangretur&aksi=ubahbarangretur&id_retur=<?php echo $data['id_retur']; ?>"
+                                        class=" btn btn-info btn-sm custom-btn">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
                                     <a href="?page=barangretur&aksi=hapusbarangretur&id_retur=<?php echo $data['id_retur']; ?>"
                                         class="btn btn-danger btn-sm custom-btn"
                                         onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                                         <i class="fas fa-trash"></i> Hapus
                                     </a>
-                                    <a href="pdf4.php?id_retur=<?php echo $data['id_retur']; ?>"
-                                        class="btn btn-warning btn-sm custom-btn" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Export PDF">
-                                        <i class="fas fa-file-pdf"></i> Export PDF
-                                    </a>
+
                                 </td>
                             </tr>
                         <?php } ?>

@@ -54,13 +54,13 @@ if (isset($_POST['submit'])) { ?>
 		</table>
 	</body>
 
-	<?php
+<?php
 }
 ?>
 
 <?php
 
-$koneksi = new mysqli("localhost", "root", "", "webinventory");
+$koneksi = new mysqli("localhost", "root", "", "inventori");
 
 
 $bln = $_POST['bln'];
@@ -107,7 +107,7 @@ if ($bln == 'all') {
 						<td><?php echo $data['tujuan'] ?></td>
 
 					</tr>
-					<?php
+				<?php
 				}
 				?>
 
@@ -139,25 +139,7 @@ if ($bln == 'all') {
 
 				<?php
 				$no = 1;
-				// Pastikan koneksi database masih terbuka
-				if (!$koneksi || $koneksi->connect_error) {
-					// Jika koneksi tertutup, buat koneksi baru
-					$koneksi = new mysqli("localhost", "username", "password", "nama_database");
-
-					if ($koneksi->connect_error) {
-						die("Koneksi gagal: " . $koneksi->connect_error);
-					}
-				}
-
-				// Kemudian jalankan query
 				$sql = $koneksi->query("select * from barang_keluar where MONTH(tanggal) = '$bln' and YEAR(tanggal) = '$thn'");
-
-				if (!$sql) {
-					die("Error dalam query: " . $koneksi->error);
-				}
-
-				// Setelah selesai menggunakan koneksi
-// $koneksi->close(); // Tutup koneksi setelah semua query selesai
 				while ($data = $sql->fetch_assoc()) {
 
 					?>
@@ -172,7 +154,7 @@ if ($bln == 'all') {
 						<td><?php echo $data['tujuan'] ?></td>
 
 					</tr>
-					<?php
+				<?php
 				}
 				?>
 			</tbody>

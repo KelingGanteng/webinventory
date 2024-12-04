@@ -150,6 +150,24 @@ $tanggal_keluar = date("Y-m-d");
 							</div>
 						</div>
 
+						<label for="departemen">Pilih Departemen</label>
+						<div class="form-group">
+							<div class="form-line">
+								<select name="departemen" id="departemen" class="form-control">
+									<option value="">-- Pilih Departemen --</option>
+									<?php
+									// Query untuk mengambil data departemen
+									$sql_departemen = $koneksi->query("SELECT * FROM departemen ORDER BY nama ASC");
+									while ($data_departemen = $sql_departemen->fetch_assoc()) {
+										echo "<option value='" . $data_departemen['id'] . "'>";
+										echo htmlspecialchars($data_departemen['nama']);
+										echo "</option>";
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
 
 
 
@@ -241,7 +259,9 @@ $tanggal_keluar = date("Y-m-d");
 			
 				$jumlah = $_POST['jumlahkeluar'];
 				$satuan = $_POST['satuan'];  // Ambil satuan yang dipilih
+				$departemen_id = $_POST['departemen'];  // Ambil id departemen yang dipilih
 			
+
 				// Ambil stok dari gudang untuk barang yang dipilih
 				$sql_stok = $koneksi->query("SELECT jumlah FROM gudang WHERE kode_barang = '$kode_barang'");
 				$stok_data = $sql_stok->fetch_assoc();
@@ -255,8 +275,8 @@ $tanggal_keluar = date("Y-m-d");
 					$total = $stok_tersedia - $jumlah;  // Hitung stok sisa setelah barang keluar
 			
 					// Simpan transaksi barang keluar
-					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan, karyawan_id) 
-					VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan', '$karyawan_id')");
+					$sql = $koneksi->query("INSERT INTO barang_keluar (id_transaksi, tanggal, kode_barang, nama_barang, kondisi, jumlah, satuan, karyawan_id, departemen_id) 
+					VALUES('$id_transaksi', '$tanggal', '$kode_barang', '$nama_barang', '$kondisi', '$jumlah', '$satuan', '$karyawan_id', '$departemen_id')");
 
 
 					// Update stok di gudang setelah transaksi

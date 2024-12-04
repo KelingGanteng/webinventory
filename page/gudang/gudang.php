@@ -11,11 +11,7 @@
           <i class="fas fa-plus me-2"></i> Tambah Barang
         </a>
       </div>
-      <div class="mb-3">
-        <a href="export3.php" class="btn btn-primary custom-btn">
-          <i class="fas fa-download me-2"></i> Export Table
-        </a>
-      </div>
+
 
       <!-- Tabel Data -->
       <div class="table-responsive">
@@ -56,9 +52,7 @@
                     onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
                     <i class="fas fa-trash"></i> Hapus
                   </a>
-                  <a href="pdf1.php" class="btn btn-warning btn-sm custom-btn">
-                    <i class="fas fa-file-pdf"></i> Export PDF
-                  </a>
+
                 </td>
               </tr>
             <?php } ?>

@@ -77,6 +77,34 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                         </select>
                     </div>
 
+                    <!-- Kolom Karyawan -->
+                    <div class="mb-3">
+                        <label for="karyawan_id" class="form-label">Karyawan</label>
+                        <select name="karyawan_id" id="karyawan_id" class="form-control">
+                            <option value="">-- Pilih Karyawan --</option>
+                            <?php
+                            $karyawan_query = $koneksi->query("SELECT * FROM daftar_karyawan");
+                            while ($karyawan = $karyawan_query->fetch_assoc()) {
+                                echo "<option value='" . $karyawan['id'] . "'>" . $karyawan['nama'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Kolom Departemen -->
+                    <div class="mb-3">
+                        <label for="departemen_id" class="form-label">Departement</label>
+                        <select name="departemen_id" id="departemen_id" class="form-control">
+                            <option value="">-- Pilih Departement --</option>
+                            <?php
+                            $departemen_query = $koneksi->query("SELECT * FROM departemen");
+                            while ($departemen = $departemen_query->fetch_assoc()) {
+                                echo "<option value='" . $departemen['id'] . "'>" . $departemen['nama'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
                     <!-- Kondisi Barang -->
                     <label for="kondisi">Kondisi</label>
                     <div class="form-group">
@@ -129,6 +157,8 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                 if (isset($_POST['simpan_retur'])) {
                     $id_retur = $_POST['id_retur'];
                     $tanggal_retur = $_POST['tanggal_retur'];
+                    $karyawan_id = $_POST['karyawan_id'];
+                    $departemen_id = $_POST['departemen_id'];
 
                     // Ambil barang yang dipilih
                     $barang = $_POST['barang'];
@@ -150,8 +180,8 @@ $tanggal_retur = date("Y-m-d"); // Tanggal retur
                     $tujuan = $_POST['tujuan'];
 
                     // Simpan data retur
-                    $sql = $koneksi->query("INSERT INTO barang_retur (id_retur, id_transaksi, tanggal_retur, kode_barang, nama_barang, kondisi, kerusakan, jumlah, tujuan) 
-                    VALUES('$id_retur', '$id_retur', '$tanggal_retur', '$kode_barang', '$nama_barang', '$kondisi', '$kerusakan', '$jumlah_retur', '$tujuan')");
+                    $sql = $koneksi->query("INSERT INTO barang_retur (id_retur, id_transaksi, tanggal_retur, kode_barang, nama_barang, kondisi, kerusakan, jumlah, tujuan, karyawan_id, departemen_id) 
+                    VALUES('$id_retur', '$id_retur', '$tanggal_retur', '$kode_barang', '$nama_barang', '$kondisi', '$kerusakan', '$jumlah_retur', '$tujuan', '$karyawan_id', $departemen_id)");
 
                     // Update stok barang di gudang
                     $sql2 = $koneksi->query("UPDATE gudang SET jumlah = jumlah + $jumlah_retur WHERE kode_barang='$kode_barang'");

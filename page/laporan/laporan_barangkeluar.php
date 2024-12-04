@@ -4,7 +4,7 @@
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary"> Laporan Barang Keluar</h6>
+      <h6 class="m-0 font-weight-bold text-primary">Barang Keluar</h6>
     </div>
     <div class="card-body">
 
@@ -109,7 +109,6 @@
                 <th>Nama Barang</th>
                 <th>Jumlah Keluar</th>
 
-
               </tr>
             </thead>
 
@@ -130,6 +129,8 @@
                   <td><?php echo $data['kode_barang'] ?></td>
                   <td><?php echo $data['nama_barang'] ?></td>
                   <td><?php echo $data['jumlah'] ?></td>
+                  <td><?php echo $data['tujuan'] ?></td>
+
                 </tr>
               <?php } ?>
 
