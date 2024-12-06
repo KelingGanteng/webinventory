@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 03 Des 2024 pada 03.46
+-- Waktu pembuatan: 06 Des 2024 pada 03.25
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -33,19 +33,21 @@ CREATE TABLE `barang_keluar` (
   `tanggal` date NOT NULL,
   `kode_barang` varchar(100) NOT NULL,
   `nama_barang` varchar(100) NOT NULL,
-  `kondisi` varchar(100) NOT NULL,
+  `kondisi` varchar(255) NOT NULL,
   `jumlah` varchar(100) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `satuan` varchar(100) NOT NULL
+  `satuan` varchar(100) NOT NULL,
+  `karyawan_id` int(11) NOT NULL,
+  `departemen_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `barang_keluar`
 --
 
-INSERT INTO `barang_keluar` (`id`, `id_transaksi`, `tanggal`, `kode_barang`, `nama_barang`, `kondisi`, `jumlah`, `total`, `satuan`) VALUES
-(41, 'TRK-1124003', '2024-11-29', '', '', 'Bekas', '5', 0.00, ''),
-(73, 'TRK-1224004', '2024-12-02', 'SF/MIS-001', 'Printer L320', 'Baik', '0', 0.00, '');
+INSERT INTO `barang_keluar` (`id`, `id_transaksi`, `tanggal`, `kode_barang`, `nama_barang`, `kondisi`, `jumlah`, `total`, `satuan`, `karyawan_id`, `departemen_id`) VALUES
+(41, 'TRK-1124003', '2024-11-29', '', '', '', '5', 0.00, '', 0, 0),
+(90, 'TRK-1224006', '2024-12-04', 'SF/MIS-002', 'Sahtel Panasonic', 'Baik', '0', 0.00, '', 2, 1);
 
 --
 -- Trigger `barang_keluar`
@@ -72,16 +74,10 @@ CREATE TABLE `barang_masuk` (
   `nama_barang` varchar(100) DEFAULT NULL,
   `kondisi` varchar(100) NOT NULL,
   `jumlah` varchar(150) DEFAULT NULL,
-  `satuan` varchar(100) NOT NULL
+  `satuan` varchar(100) NOT NULL,
+  `daftar_karyawan` varchar(250) NOT NULL,
+  `departement` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data untuk tabel `barang_masuk`
---
-
-INSERT INTO `barang_masuk` (`id`, `id_transaksi`, `tanggal`, `kode_barang`, `nama_barang`, `kondisi`, `jumlah`, `satuan`) VALUES
-(91, 'TRM-1224001', '2024-12-03', 'SF/MIS-001', 'Printer L320', 'Baik', '5', 'Unit'),
-(92, 'TRM-1224002', '2024-12-02', 'SF/MIS-001', 'Printer L320', 'Baik', '5', 'Unit');
 
 --
 -- Trigger `barang_masuk`
@@ -111,15 +107,42 @@ CREATE TABLE `barang_retur` (
   `kerusakan_dropdown` text DEFAULT NULL,
   `kerusakan` text DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
-  `tujuan` varchar(255) DEFAULT NULL
+  `tujuan` varchar(255) DEFAULT NULL,
+  `karyawan_id` int(11) NOT NULL,
+  `departemen_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `barang_retur`
 --
 
-INSERT INTO `barang_retur` (`id_retur`, `id_transaksi`, `tanggal_retur`, `kode_barang`, `nama_barang`, `jenis_barang`, `kondisi`, `kerusakan_dropdown`, `kerusakan`, `jumlah`, `tujuan`) VALUES
-('RTR-1224001', 'RTR-1224001', '2024-12-02', 'SF/MIS-002', 'duit', '', 'Baik', NULL, '', 5, '');
+INSERT INTO `barang_retur` (`id_retur`, `id_transaksi`, `tanggal_retur`, `kode_barang`, `nama_barang`, `jenis_barang`, `kondisi`, `kerusakan_dropdown`, `kerusakan`, `jumlah`, `tujuan`, `karyawan_id`, `departemen_id`) VALUES
+('RTR-1224001', 'RTR-1224001', '2024-12-04', '', '', '', 'Baik', NULL, '', 0, '', 0, 1),
+('RTR-1224002', 'RTR-1224002', '2024-12-05', 'SF/MIS-002', 'Sahtel Panasonic', '', 'Baik', NULL, '', 0, '', 1, 22),
+('RTR-1224003', 'RTR-1224003', '2024-12-05', 'SF/MIS-002', 'Sahtel Panasonic', '', 'Baik', NULL, '', 0, '', 1, 21);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `daftar_karyawan`
+--
+
+CREATE TABLE `daftar_karyawan` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `departemen_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `departemen`
+--
+
+CREATE TABLE `departemen` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -142,7 +165,7 @@ CREATE TABLE `gudang` (
 --
 
 INSERT INTO `gudang` (`id`, `kode_barang`, `nama_barang`, `kondisi`, `jenis_barang`, `jumlah`, `satuan`) VALUES
-(64, 'SF/MIS-002', 'Sahtel Panasonic', 'Baik', 'Alat Tulis', '7', 'Unit');
+(65, 'SF/MIS-001', 'Hardisk seagate ', 'Rusak', 'Hardisk', '5', 'Unit');
 
 -- --------------------------------------------------------
 
@@ -162,8 +185,7 @@ CREATE TABLE `jenis_barang` (
 --
 
 INSERT INTO `jenis_barang` (`id`, `jenis_barang`, `code_barang`, `kerusakan_barang`) VALUES
-(35, 'Printer', 'SF/MIS-001', NULL),
-(36, 'Alat Tulis', 'SF/MIS-002', NULL);
+(37, 'Hardisk', 'SF/MIS-001', NULL);
 
 -- --------------------------------------------------------
 
@@ -193,7 +215,7 @@ CREATE TABLE `satuan` (
 --
 
 INSERT INTO `satuan` (`id`, `satuan`) VALUES
-(39, 'Unit');
+(40, 'Unit');
 
 -- --------------------------------------------------------
 
@@ -259,6 +281,19 @@ ALTER TABLE `barang_retur`
   ADD PRIMARY KEY (`id_retur`);
 
 --
+-- Indeks untuk tabel `daftar_karyawan`
+--
+ALTER TABLE `daftar_karyawan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `departemen_id` (`departemen_id`);
+
+--
+-- Indeks untuk tabel `departemen`
+--
+ALTER TABLE `departemen`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `gudang`
 --
 ALTER TABLE `gudang`
@@ -303,25 +338,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `barang_keluar`
 --
 ALTER TABLE `barang_keluar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT untuk tabel `barang_masuk`
 --
 ALTER TABLE `barang_masuk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+
+--
+-- AUTO_INCREMENT untuk tabel `daftar_karyawan`
+--
+ALTER TABLE `daftar_karyawan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `departemen`
+--
+ALTER TABLE `departemen`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT untuk tabel `gudang`
 --
 ALTER TABLE `gudang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT untuk tabel `jenis_barang`
 --
 ALTER TABLE `jenis_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT untuk tabel `kerusakan_barang`
@@ -333,7 +380,7 @@ ALTER TABLE `kerusakan_barang`
 -- AUTO_INCREMENT untuk tabel `satuan`
 --
 ALTER TABLE `satuan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_supplier`
@@ -346,6 +393,16 @@ ALTER TABLE `tb_supplier`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `daftar_karyawan`
+--
+ALTER TABLE `daftar_karyawan`
+  ADD CONSTRAINT `daftar_karyawan_ibfk_1` FOREIGN KEY (`departemen_id`) REFERENCES `departemen` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
