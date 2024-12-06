@@ -4,7 +4,6 @@ error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
 $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
-// Pindahkan proses login ke dalam pengecekan isset($_POST['login'])
 if (isset($_POST['login'])) {
 	$username = mysqli_real_escape_string($koneksi, $_POST['username']);
 	$password = md5($_POST['password']);
@@ -23,8 +22,6 @@ if (isset($_POST['login'])) {
 	}
 }
 ?>
-
-<!-- HTML form tetap sama -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,6 +82,18 @@ if (isset($_POST['login'])) {
 			font-weight: 600;
 		}
 
+		/* Logo styling */
+		.login-logo {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		.login-logo img {
+			width: 100px;
+			/* Adjust the width of the logo */
+			height: auto;
+		}
+
 		.form-group {
 			margin-bottom: 25px;
 			position: relative;
@@ -140,17 +149,6 @@ if (isset($_POST['login'])) {
 			border: 1px solid #ffcccc;
 		}
 
-		/* Logo styling */
-		.login-logo {
-			text-align: center;
-			margin-bottom: 30px;
-		}
-
-		.login-logo i {
-			font-size: 50px;
-			color: #d12424;
-		}
-
 		/* Input icons */
 		.form-group i {
 			position: absolute;
@@ -182,24 +180,6 @@ if (isset($_POST['login'])) {
 	</style>
 </head>
 
-<link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-
-</head>
-
-
-<!-- Bootstrap -->
-
-<link href="login/css/bootstrap.min.css" rel="stylesheet">
-
-
-
-
-<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-
-
-</head>
-
 <body>
 
 	<div class="container">
@@ -207,14 +187,15 @@ if (isset($_POST['login'])) {
 			<div class="center">
 				<div class="login">
 
-
+					<!-- Logo Section -->
+					<div class="login-logo">
+						<img src="Samco.png" alt="Logo"> <!-- Replace 'logo.png' with the actual logo file -->
+					</div>
 
 					<form role="form" action="" method="post">
 						<h2> Log In</h2>
 						<br>
 						<div class="form-group">
-
-
 							<input type="text" name="username" class="form-control" placeholder="Username" required
 								autofocus />
 						</div>
@@ -222,55 +203,20 @@ if (isset($_POST['login'])) {
 							<input type="password" name="password" class="form-control" placeholder="Password" required
 								autofocus />
 						</div>
-						<!-- <div class="form-group">
-							<select name="level" class="form-control" required>
-								<option value="">Pilih Level User</option>
-								<option value="superadmin">ALFIN</option>
-								<option value="admin">RIPAL</option>
-								<option value="petugas">RAIHAN</option>
-
-							</select>
-						</div> -->
 						<div class="form-group">
 							<input type="submit" name="login" class="btn btn-primary btn-block" value="Log in" />
-
 						</div>
 						<br>
-
 					</form>
 
 				</div>
 
 			</div>
 		</div>
+	</div>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 </body>
 
 </html>
-
-<?php
-
-$username = $_POST['username'];
-$password = md5($_POST['password']);
-$login = $_POST['login'];
-
-
-if ($login) {
-	$sql = $koneksi->query("select * from users where username='$username' and password='$password'");
-	$ketemu = $sql->num_rows;
-	$data = $sql->fetch_assoc();
-	var_dump($data);
-	if ($ketemu >= 1) {
-		$_SESSION['username'] = $data['username'];
-		header("location:index.php");
-	} else {
-		echo '<center><div class="alert alert-danger">Upss...!!! Login gagal. Silakan Coba Kembali</div></center>';
-
-	}
-}
-
-
-
-?>

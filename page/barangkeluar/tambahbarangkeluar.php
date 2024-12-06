@@ -60,11 +60,11 @@ $tahun = date("y");
 
 // Membuat format kode transaksi berdasarkan angka urut
 if (strlen($tambah) == 1) {
-	$format = "TRK-" . $bulan . $tahun . "00" . $tambah;
+	$format = "MIS-" . $bulan . $tahun . "00" . $tambah;
 } else if (strlen($tambah) == 2) {
-	$format = "TRK-" . $bulan . $tahun . "0" . $tambah;
+	$format = "MIS-" . $bulan . $tahun . "0" . $tambah;
 } else {
-	$format = "TRK-" . $bulan . $tahun . $tambah;
+	$format = "MIS-" . $bulan . $tahun . $tambah;
 }
 
 // Tanggal barang keluar

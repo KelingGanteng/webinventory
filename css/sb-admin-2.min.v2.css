@@ -8761,7 +8761,7 @@ a:focus {
   display: flex;
 }
 #wrapper #content-wrapper {
-  background-color: #c10808;
+  background-color: #691919;
   width: 100%;
   overflow-x: hidden;
 }
@@ -8770,7 +8770,7 @@ a:focus {
 }
 .container,
 .container-fluid {
-  padding: 2.5rem;
+  padding: 1.5rem;
 }
 .scroll-to-top {
   position: fixed;
@@ -9059,7 +9059,7 @@ a:focus {
   width: 2rem;
 }
 .topbar {
-  height: 3.7rem;
+  height: 6.7rem;
 }
 .topbar #sidebarToggleTop {
   height: 2.5rem;
@@ -9214,9 +9214,10 @@ a:focus {
 .sidebar .nav-item .collapsing .collapse-inner {
   padding: 0.5rem 0;
   min-width: 10rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   margin: 0 0 1rem 0;
 }
+/* CSS untuk Teks dengan Efek Gradasi */
 .sidebar .nav-item .collapse .collapse-inner .collapse-header,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-header {
   margin: 0;
@@ -9224,15 +9225,33 @@ a:focus {
   padding: 0.5rem 1.5rem;
   text-transform: uppercase;
   font-weight: 800;
-  font-size: 0.65rem;
-  color: #f7f0f0;
+  font-size: 0.88rem;
+  background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Warna gradasi */
+  -webkit-background-clip: text; /* Mengaplikasikan gradasi pada teks */
+  color: transparent; /* Membuat teks transparan, agar gradasi terlihat */
+  letter-spacing: 1px; /* Spasi antar huruf */
+  transition: all 0.3s ease; /* Transisi halus */
 }
+
+/* Efek Hover pada Teks */
+.sidebar .nav-item .collapse .collapse-inner .collapse-header:hover,
+.sidebar .nav-item .collapsing .collapse-inner .collapse-header:hover {
+  background: linear-gradient(
+    45deg,
+    #6a11cb,
+    #2575fc
+  ); /* Warna gradasi berubah saat hover */
+  -webkit-background-clip: text;
+  color: transparent;
+  transform: scale(1.05); /* Efek zoom saat hover */
+}
+
 .sidebar .nav-item .collapse .collapse-inner .collapse-item,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   display: block;
-  color: #f1bebe;
+  color: #ffffff;
   text-decoration: none;
   border-radius: 0.35rem;
   white-space: nowrap;
@@ -9342,7 +9361,7 @@ a:focus {
     margin-right: 0.25rem;
   }
   .sidebar .nav-item .nav-link span {
-    font-size: 0.85rem;
+    font-size: 1rem;
     display: inline;
   }
   .sidebar .nav-item .nav-link[data-toggle="collapse"]::after {
@@ -10122,8 +10141,8 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 .sidebar-brand-icon img {
-  max-width: 40px;
-  height: auto;
+  max-width: 100px;
+  height: 200px;
   transition: transform 0.3s ease;
 }
 

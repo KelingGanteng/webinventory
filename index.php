@@ -75,19 +75,29 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-building"></i>
+        <div class="sidebar-brand-icon">
+          <img src="Samco.png" alt="Logo" class="logo-image">
+          <style>
+            /* Styling untuk logo di sidebar */
+            .sidebar-brand-icon .logo-image {
+              width: 100px;
+              /* Ukuran lebar gambar diperbesar */
+              height: 50px;
+              /* Ukuran tinggi gambar diperbesar */
+              object-fit: contain;
+              margin-top: 30px;
+              /* Memberikan jarak agar gambar sedikit lebih turun */
+            }
+          </style>
         </div>
-        <div class="sidebar-brand-text mx-2">PT. Samco Farma</div>
+
       </a>
 
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-
       <?php
-      // ... existing code ...
-      
+      // Menyediakan session untuk superadmin
       if (isset($_SESSION['superadmin'])) {
         $user = $_SESSION['superadmin'];
         $sql = $koneksi->prepare("SELECT * FROM users WHERE id = ?");
@@ -95,7 +105,6 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         $sql->execute();
         $data = $sql->get_result()->fetch_assoc();
       }
-
       ?>
 
       <!-- Nav Item - Dashboard -->
@@ -113,6 +122,7 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         Pilih Menu
       </div>
 
+      <!-- Data Master -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseData" aria-expanded="true"
           aria-controls="collapseData">
@@ -127,13 +137,11 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             <a class="collapse-item" href="?page=gudang">Data Barang</a>
             <a class="collapse-item" href="?page=daftarkaryawan">Daftar Karyawan</a>
             <a class="collapse-item" href="?page=departemen">Departement</a>
-            <!--<a class="collapse-item" href="?page=supplier">Data Supplier</a> -->>
-
           </div>
         </div>
       </li>
 
-      <!-- Nav Item - Pages Collapse Menu -->
+      <!-- Transaksi -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
           aria-controls="collapsePages">
@@ -146,8 +154,11 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             <a class="collapse-item" href="?page=barangmasuk">Barang Masuk</a>
             <a class="collapse-item" href="?page=barangkeluar">Barang Keluar</a>
             <a class="collapse-item" href="?page=barangretur">Barang Retur</a>
-
           </div>
+        </div>
+      </li>
+
+      <!-- Laporan -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan"
           aria-expanded="true" aria-controls="collapseLaporan">
@@ -157,13 +168,12 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         <div id="collapseLaporan" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Menu Laporan:</h6>
-            <!-- <a class="collapse-item" href="?page=laporan_supplier">Laporan Supplier</a> -->
             <a class="collapse-item" href="?page=laporan_barangmasuk">Laporan Barang Masuk</a>
             <a class="collapse-item" href="?page=laporan_gudang">Laporan Stok Gudang</a>
             <a class="collapse-item" href="?page=laporan_barangkeluar">Laporan Barang Keluar</a>
+            <a class="collapse-item" href="?page=laporan_barangretur">Laporan Barang Retur</a>
           </div>
         </div>
-      </li>
       </li>
 
       <!-- Divider -->
@@ -173,8 +183,117 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
       <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
       </div>
+      <style>
+        /* Styling untuk Sidebar */
+        /* Styling untuk Sidebar */
+        .sidebar {
+          background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+          /* Gradiasi merah dari gelap ke cerah */
+          font-size: 16px;
+          /* Ukuran font default */
+        }
 
+        .sidebar .nav-item {
+          margin-bottom: 1rem;
+          /* Memberikan jarak antar menu */
+        }
+
+        .sidebar .nav-link {
+          color: #fff !important;
+          /* Warna teks default */
+          font-weight: 600;
+          /* Mengatur font agar lebih tebal */
+          font-size: 16px;
+          transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+          /* Menambahkan animasi saat hover */
+        }
+
+        .sidebar .nav-link:hover {
+          background-color: #e60000;
+          /* Warna merah lebih gelap saat hover */
+          color: #fff;
+          /* Teks tetap putih saat hover */
+          transform: scale(1.05);
+          /* Efek memperbesar sedikit */
+        }
+
+        .sidebar .nav-link i {
+          margin-right: 10px;
+          /* Jarak antara ikon dan teks */
+          font-size: 18px;
+          /* Ukuran ikon */
+        }
+
+        /* Styling untuk Sub-Menu */
+        .collapse-inner .collapse-item {
+          padding: 8px 20px;
+          font-size: 14px;
+          color: #6c757d;
+          /* Warna teks sub-menu */
+          transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .collapse-inner .collapse-item:hover {
+          background-color: #ff4d4d;
+          /* Warna merah terang saat hover pada sub-menu */
+          color: white;
+          /* Warna teks putih saat hover */
+          transform: scale(1.05);
+          /* Efek membesar saat hover pada sub-menu */
+        }
+
+        /* Sidebar aktif */
+        .nav-item.active .nav-link {
+          background-color: #ff3333 !important;
+          /* Warna merah aktif */
+          color: white;
+        }
+
+        .nav-item.active .nav-link:hover {
+          background-color: #e60000 !important;
+          /* Warna saat hover pada item aktif */
+        }
+
+        /* Animasi pada menu collapse */
+        .collapse {
+          transition: max-height 0.5s ease-out;
+          /* Efek smooth saat membuka menu collapse */
+        }
+
+        .collapse-inner {
+          background-color: #f8f9fa;
+          border-radius: 5px;
+        }
+
+        .sidebar-heading {
+          font-size: 16px;
+          color: #ccc;
+          text-transform: uppercase;
+          padding: 10px 20px;
+          font-weight: bold;
+        }
+
+        .sidebar-divider {
+          border-top: 1px solid #e5e5e5;
+        }
+
+        /* Tombol Toggle Sidebar */
+        #sidebarToggle {
+          background-color: #ff1a1a;
+          /* Warna merah terang untuk tombol toggle */
+          color: #fff;
+          padding: 10px 15px;
+          border-radius: 50%;
+          transition: transform 0.3s ease;
+        }
+
+        #sidebarToggle:hover {
+          transform: rotate(180deg);
+          /* Efek rotasi saat tombol sidebar toggle di-hover */
+        }
+      </style>
     </ul>
+
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -193,24 +312,179 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
 
 
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav" style="width: 100%; display: flex; justify-content: space-between;">
 
-            <div class="topbar-divider d-none d-sm-block"></div>
+            <!-- Left Section: Data Master Transaksi Laporan -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <span class="data-master-text">All Item</span>
+              </a>
+              <!-- Dropdown Menu -->
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="?page=laporan_gudang">Laporan Gudang </a>
+                <a class="dropdown-item" href="?page=departemen">Departement</a>
+                <a class="dropdown-item" href="?page=gudang">Stok Gudang</a>
+              </div>
+            </li>
 
-            <!-- Nav Item - User Information -->
+            <!-- Right Section: Welcome & Logout -->
             <li class="nav-item dropdown no-arrow">
               <div class="top-menu">
                 <ul class="nav pull-right top-menu">
 
-                  <li><a onclick="return confirm('Apakah anda yakin akan logout?')" class="btn btn-danger"
-                      class="logout" href="logout.php">Logout</a></li>
+                  <!-- Personalized Greeting -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">
+                      <span class="greeting-text">Welcome, <strong><?php echo $_SESSION['username']; ?></strong>!</span>
+                    </a>
+                  </li>
+
+                  <!-- Logout Button -->
+                  <li>
+                    <a onclick="return confirm('Apakah anda yakin akan logout?')" class="btn btn-danger logout-btn"
+                      href="logout.php">
+                      <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                    </a>
+                  </li>
+
+                  <style>
+                    /* Styling untuk Navbar */
+                    .navbar {
+                      background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+                      /* Gradiasi merah yang konsisten dengan sidebar */
+                      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                      /* Tambahkan sedikit bayangan agar lebih elegan */
+                    }
+
+                    .navbar-nav {
+                      display: flex;
+                      justify-content: space-between;
+                      width: 100%;
+                    }
+
+                    /* Left Section: Data Master Text Styling */
+                    .data-master-text {
+                      font-family: 'Nunito', sans-serif;
+                      font-size: 22px;
+                      color: #fff;
+                      /* Warna teks putih agar kontras dengan latar belakang merah */
+                      font-weight: 700;
+                      margin-right: 25px;
+                      cursor: pointer;
+                      padding: 5px 15px;
+                      border: 2px solid #fff;
+                      /* Border putih untuk kontras */
+                      border-radius: 5px;
+                      transition: border-color 0.3s ease, color 0.3s ease;
+                    }
+
+                    .data-master-text:hover {
+                      color: #fff;
+                      /* Tetap putih saat hover */
+                      border-color: #fff;
+                      /* Border tetap putih */
+                      background-color: #e60000;
+                      /* Warna latar belakang saat hover */
+                    }
+
+                    /* Dropdown Menu Styling */
+                    .dropdown-menu {
+                      background-color: #f8f9fa;
+                      /* Warna background terang agar menu tetap terbaca */
+                      border: 1px solid #ddd;
+                      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                      border-radius: 5px;
+                      position: absolute;
+                      top: 100%;
+                      left: 0;
+                      z-index: 1000;
+                    }
+
+                    .dropdown-item {
+                      padding: 10px 20px;
+                      font-size: 16px;
+                      color: #333;
+                      text-decoration: none;
+                      transition: background-color 0.3s ease;
+                    }
+
+                    .dropdown-item:hover {
+                      background-color: #ff4d4d;
+                      /* Sama dengan warna gradiasi pada navbar */
+                      color: white;
+                    }
+
+                    /* Right Section: Greeting Text */
+                    .greeting-text {
+                      font-family: 'Nunito', sans-serif;
+                      font-size: 18px;
+                      color: #fff;
+                      /* Warna putih untuk teks sapaan */
+                      font-weight: 700;
+                      transition: color 0.3s ease;
+                      margin-right: 25px;
+                    }
+
+                    .greeting-text:hover {
+                      color: #34bfa3;
+                      /* Warna saat hover */
+                      cursor: pointer;
+                    }
+
+                    /* Customize the logout button */
+                    .logout-btn {
+                      display: flex;
+                      align-items: center;
+                      padding: 10px 20px;
+                      font-size: 16px;
+                      font-weight: 600;
+                      background-color: #ff4d4d;
+                      /* Sesuaikan dengan gradiasi navbar */
+                      color: white;
+                      border-radius: 5px;
+                      transition: background-color 0.3s ease, transform 0.3s ease;
+                      text-decoration: none;
+                      margin-left: 10px;
+                    }
+
+                    .logout-btn:hover {
+                      background-color: #e60000;
+                      /* Merah lebih gelap saat hover */
+                      cursor: pointer;
+                      transform: scale(1.05);
+                    }
+
+                    .logout-text {
+                      margin-left: 8px;
+                    }
+
+                    .logout-btn i {
+                      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+                      transition: box-shadow 0.3s ease;
+                    }
+
+                    .logout-btn i:hover {
+                      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+                    }
+
+                    .nav-item {
+                      margin: 0;
+                    }
+
+                    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+                  </style>
                 </ul>
               </div>
-
             </li>
 
           </ul>
+
+
+
+
+
+
 
         </nav>
         <!-- End of Topbar -->
@@ -393,18 +667,23 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
             }
             if ($page == "laporan_barangmasuk") {
               if ($aksi == "") {
-                include "page/laporan/laporan_barangmasuk.php";
+                include "laporan_barangmasuk.php";
               }
             }
 
             if ($page == "laporan_gudang") {
               if ($aksi == "") {
-                include "page/laporan/laporan_gudang.php";
+                include "laporan_gudang.php";
               }
             }
             if ($page == "laporan_barangkeluar") {
               if ($aksi == "") {
-                include "page/laporan/laporan_barangkeluar.php";
+                include "laporan_barangkeluar.php";
+              }
+            }
+            if ($page == "laporan_barangretur") {
+              if ($aksi == "") {
+                include "laporan_barangretur.php";
               }
             }
 
@@ -426,19 +705,17 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         <!-- End of Main Content -->
 
         <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
 
-            </div>
-        </footer>
-        <!-- End of Footer -->
 
       </div>
-      <!-- End of Content Wrapper -->
+      </footer>
+      <!-- End of Footer -->
 
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
   </div>
 
   <!-- Scroll to Top Button-->
