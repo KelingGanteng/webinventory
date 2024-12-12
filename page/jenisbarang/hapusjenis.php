@@ -1,9 +1,5 @@
 <?php
-// Debugging
-echo "<pre>Debug Info:";
-echo "\nGET Parameters: ";
-print_r($_GET);
-echo "</pre>";
+
 
 // Cek koneksi
 if (!isset($koneksi)) {

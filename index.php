@@ -132,11 +132,13 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
         <div id="collapseData" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Menu:</h6>
+            <a class="collapse-item" href="?page=aset">Asset Management</a>
             <a class="collapse-item" href="?page=jenisbarang">Jenis Barang</a>
             <a class="collapse-item" href="?page=satuanbarang">Satuan Barang</a>
             <a class="collapse-item" href="?page=gudang">Data Barang</a>
-            <a class="collapse-item" href="?page=daftarkaryawan">Daftar Karyawan</a>
             <a class="collapse-item" href="?page=departemen">Departement</a>
+            <a class="collapse-item" href="?page=daftarkaryawan">Daftar Karyawan</a>
+
           </div>
         </div>
       </li>
@@ -179,20 +181,53 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+
       <style>
-        /* Styling untuk Sidebar */
         /* Styling untuk Sidebar */
         .sidebar {
           background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
           /* Gradiasi merah dari gelap ke cerah */
           font-size: 16px;
           /* Ukuran font default */
+          position: fixed;
+          /* Agar sidebar tetap di posisi tetap */
+          top: 0;
+          left: 0;
+          /* Pindahkan sidebar ke kiri */
+          height: 100vh;
+          /* Menutupi seluruh tinggi layar */
+          width: 250px;
+          /* Lebar sidebar */
+          z-index: 1000;
+          /* Menjamin sidebar berada di atas konten */
+          transition: transform 0.3s ease-in-out;
+          box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
+          /* Tambahkan bayangan pada sisi kanan sidebar untuk efek kedalaman */
         }
 
+        /* Tombol Toggle Sidebar */
+        #sidebarToggle {
+          background-color: #ff1a1a;
+          /* Warna merah terang untuk tombol toggle */
+          color: #fff;
+          padding: 10px 15px;
+          border-radius: 50%;
+          transition: transform 0.3s ease;
+          position: absolute;
+          /* Menempatkan tombol toggle di posisi yang tetap */
+          top: 20px;
+          left: 20px;
+          /* Tombol berada di kiri atas */
+          z-index: 1100;
+          /* Pastikan tombol berada di atas sidebar */
+        }
+
+        #sidebarToggle:hover {
+          transform: rotate(180deg);
+          /* Efek rotasi saat tombol sidebar toggle di-hover */
+        }
+
+        /* Styling untuk navbar item */
         .sidebar .nav-item {
           margin-bottom: 1rem;
           /* Memberikan jarak antar menu */
@@ -204,15 +239,16 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
           font-weight: 600;
           /* Mengatur font agar lebih tebal */
           font-size: 16px;
+          padding: 10px 20px;
+          /* Memberikan padding untuk menu */
           transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-          /* Menambahkan animasi saat hover */
+          /* Animasi saat hover */
         }
 
         .sidebar .nav-link:hover {
           background-color: #e60000;
           /* Warna merah lebih gelap saat hover */
           color: #fff;
-          /* Teks tetap putih saat hover */
           transform: scale(1.05);
           /* Efek memperbesar sedikit */
         }
@@ -229,7 +265,6 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
           padding: 8px 20px;
           font-size: 14px;
           color: #6c757d;
-          /* Warna teks sub-menu */
           transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
@@ -259,6 +294,46 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
           transition: max-height 0.5s ease-out;
           /* Efek smooth saat membuka menu collapse */
         }
+
+        .collapse-inner {
+          background-color: #f8f9fa;
+          border-radius: 5px;
+        }
+
+        /* Styling untuk Heading Sidebar */
+        .sidebar-heading {
+          font-size: 16px;
+          color: #ccc;
+          text-transform: uppercase;
+          padding: 10px 20px;
+          font-weight: bold;
+        }
+
+        /* Divider untuk memisahkan menu */
+        .sidebar-divider {
+          border-top: 1px solid #e5e5e5;
+        }
+
+        /* Agar konten utama tidak tertutup sidebar */
+        body {
+          margin-left: 250px;
+          /* Memberikan ruang di sebelah kiri konten untuk sidebar */
+          transition: margin-left 0.3s ease;
+          /* Efek transisi saat membuka/menutup sidebar */
+        }
+
+        /* Untuk tampilan ketika sidebar tersembunyi (hanya jika dibutuhkan) */
+        .sidebar-hidden {
+          transform: translateX(-250px);
+          /* Menyembunyikan sidebar */
+        }
+
+        /* Efek ketika menu di-expand */
+        .collapse {
+          transition: max-height 0.5s ease-out;
+          /* Efek smooth saat membuka menu collapse */
+        }
+
 
         .collapse-inner {
           background-color: #f8f9fa;
@@ -530,6 +605,19 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
 
               if ($aksi == "hapussupplier") {
                 include "page/supplier/hapussupplier.php";
+              }
+            }
+
+
+            if ($page == "aset") {
+              if ($aksi == "") {
+                include "page/aset/aset.php";
+              } elseif ($aksi == "tambahaset") {
+                include "page/aset/tambahaset.php";
+              } elseif ($aksi == "ubahaset") {
+                include "page/aset/ubahaset.php";
+              } elseif ($aksi == "hapusaset") {
+                include "page/aset/hapusaset.php";
               }
             }
 
@@ -833,6 +921,23 @@ $koneksi = new mysqli("localhost", "root", "", "webinventory");
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.4/dist/sweetalert2.min.js"></script>
 
+  <!-- Hapus versi jQuery 3.3.1 dan gunakan versi 3.6.0 dari CDN -->
+
+  <!-- Gunakan Select2 versi terbaru -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      // Inisialisasi Select2 untuk elemen dengan class 'select2'
+      $('.select2').select2({
+        placeholder: "Pilih",
+        allowClear: true
+      });
+    });
+
+  </script>
 </body>
 
 </html>

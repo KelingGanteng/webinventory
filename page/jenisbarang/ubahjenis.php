@@ -1,44 +1,65 @@
 <?php
+// Pastikan sudah terhubung ke database
+// include("koneksi.php");
 
-// Cek koneksi
-if (!isset($koneksi)) {
-    die("Koneksi database tidak tersedia!");
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Ambil data jenis barang berdasarkan ID
+    $query = $koneksi->query("SELECT * FROM jenis_barang WHERE id = '$id'");
+    $data = $query->fetch_assoc();
+
+    if (!$data) {
+        die("Data tidak ditemukan.");
+    }
+
+    $jenis_barang = $data['jenis_barang'];
+    $code_barang = $data['code_barang'];
+
+    // Ambil kode departemen dan angka romawi dari code_barang
+    $parts = explode('/', $code_barang);
+    $departemen_kode = $parts[1];
+    $angka_romawi = $parts[2];
+
+    // Ambil data departemen untuk dropdown
+    $query_departemen = $koneksi->query("SELECT * FROM departemen");
+} else {
+    die("ID tidak diberikan.");
 }
 
-// Cek parameter id
-if (!isset($_GET['id'])) {
-    echo "<script>
-        alert('ID tidak ditemukan!');
-        window.location.href='?page=jenisbarang';
-    </script>";
-    exit;
-}
+if (isset($_POST['simpan'])) {
+    $jenis_barang = $_POST['jenis_barang'];
+    $departemen_id = $_POST['departemen'];
+    $angka_romawi = $_POST['romawi'];
 
-$id = (int) $_GET['id'];
-// Debug query
-$query = "SELECT * FROM jenis_barang WHERE id = '$id'";
+    // Ambil nama departemen berdasarkan id
+    $query_departemen = $koneksi->query("SELECT nama FROM departemen WHERE id = '$departemen_id'");
 
+    if ($query_departemen) {
+        $departemen = $query_departemen->fetch_assoc();
+        $departemen_kode = substr($departemen['nama'], 0, 2); // Ambil 2 huruf pertama dari nama departemen
 
-$sql = $koneksi->query($query);
+        // Update data jenis barang
+        $sql = $koneksi->query("UPDATE jenis_barang SET jenis_barang = '$jenis_barang', code_barang = 'SF/$departemen_kode/$angka_romawi' WHERE id = '$id'");
 
-// Cek query
-if (!$sql) {
-    die("Error query: " . $koneksi->error);
-}
-
-$data = $sql->fetch_assoc();
-
-// Cek data
-if (!$data) {
-    echo "<script>
-        alert('Data tidak ditemukan!');
-        window.location.href='?page=jenisbarang';
-    </script>";
-    exit;
+        if ($sql) {
+            ?>
+            <script type="text/javascript">
+                alert("Data Berhasil Diubah");
+                window.location.href = "?page=jenisbarang";
+            </script>
+            <?php
+        } else {
+            echo "Error: " . $koneksi->error;
+        }
+    } else {
+        echo "Error: " . $koneksi->error;
+    }
 }
 ?>
 
 <div class="container-fluid">
+    <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Ubah Jenis Barang</h6>
@@ -46,54 +67,57 @@ if (!$data) {
         <div class="card-body">
             <div class="table-responsive">
                 <div class="body">
-                    <form method="POST">
-                        <label for="code_barang">Kode Barang</label>
+                    <form method="POST" enctype="multipart/form-data">
+                        <label for="">Jenis Barang</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="code_barang" id="code_barang"
-                                    value="<?php echo htmlspecialchars($data['code_barang']); ?>" class="form-control"
-                                    required />
+                                <input type="text" name="jenis_barang" class="form-control" value="<?php echo $jenis_barang; ?>" required />
                             </div>
                         </div>
-                        <label for="jenis_barang">Jenis Barang</label>
+
+                        <!-- Dropdown Departemen -->
+                        <label for="departemen">Departemen</label>
+                        <div class="form-group">
+                            <select name="departemen" id="departemen" class="form-control" required>
+                                <?php
+                                // Ambil data departemen untuk dropdown
+                                $query_departemen = $koneksi->query("SELECT * FROM departemen");
+
+                                // Cek apakah query berhasil
+                                if ($query_departemen) {
+                                    while ($row = $query_departemen->fetch_assoc()) {
+                                        $selected = ($row['id'] == $departemen_id) ? 'selected' : '';
+                                        echo "<option value='{$row['id']}' {$selected}>{$row['nama']}</option>";
+                                    }
+                                } else {
+                                    echo "<option disabled>Data departemen tidak ditemukan</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <!-- Dropdown Angka Romawi -->
+                        <label for="romawi">Angka Romawi</label>
+                        <div class="form-group">
+                            <select name="romawi" id="romawi" class="form-control" required>
+                                <option value="I" <?php echo ($angka_romawi == "I") ? 'selected' : ''; ?>>I</option>
+                                <option value="II" <?php echo ($angka_romawi == "II") ? 'selected' : ''; ?>>II</option>
+                                <option value="III" <?php echo ($angka_romawi == "III") ? 'selected' : ''; ?>>III</option>
+                                <option value="IV" <?php echo ($angka_romawi == "IV") ? 'selected' : ''; ?>>IV</option>
+                            </select>
+                        </div>
+
+                        <!-- Kode Barang (automatically generated) -->
+                        <label for="">Kode Barang</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="jenis_barang" id="jenis_barang"
-                                    value="<?php echo htmlspecialchars($data['jenis_barang']); ?>" class="form-control"
-                                    required />
+                                <input type="text" name="code_barang" class="form-control" value="<?php echo $code_barang; ?>" disabled />
+                                <small>(Kode barang akan dihasilkan otomatis)</small>
                             </div>
                         </div>
 
                         <input type="submit" name="simpan" value="Simpan" class="btn btn-primary">
-                        <a href="?page=jenisbarang" class="btn btn-secondary">Kembali</a>
                     </form>
-
-                    <?php
-                    if (isset($_POST['simpan'])) {
-                        $code_barang = mysqli_real_escape_string($koneksi, $_POST['code_barang']);
-                        $jenis_barang = mysqli_real_escape_string($koneksi, $_POST['jenis_barang']);
-
-                        // Debug data yang akan diupdate
-                        echo "<pre>Data yang akan diupdate:";
-                        echo "\nID: $id";
-                        echo "\nJenis Barang: $jenis_barang";
-                        echo "</pre>";
-
-                        $update = $koneksi->prepare("UPDATE jenis_barang SET code_barang = ?, jenis_barang = ? WHERE id = ?");
-                        $update->bind_param("ssi", $code_barang, $jenis_barang, $id);
-
-                        if ($update->execute()) {
-                            echo "<script>
-                                alert('Data Berhasil Diubah');
-                                window.location.href='?page=jenisbarang';
-                            </script>";
-                        } else {
-                            echo "<script>
-                                alert('Gagal mengubah data: " . $koneksi->error . "');
-                            </script>";
-                        }
-                    }
-                    ?>
                 </div>
             </div>
         </div>

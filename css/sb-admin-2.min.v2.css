@@ -8760,11 +8760,57 @@ a:focus {
 #wrapper {
   display: flex;
 }
-#wrapper #content-wrapper {
-  background-color: #691919;
-  width: 100%;
-  overflow-x: hidden;
+/* Membuat wrapper dan content-wrapper lebih modern dan responsif */
+#wrapper,
+#content-wrapper {
+  background-color: #691919; /* Warna latar belakang utama */
+  width: 100%; /* Lebar 100% untuk memastikan elemen mengisi lebar layar */
+  overflow-x: hidden; /* Menyembunyikan konten yang melampaui lebar elemen */
+  padding: 20px; /* Memberikan padding agar konten tidak langsung menyentuh tepi */
+  box-sizing: border-box; /* Agar padding dihitung dalam lebar elemen */
+  min-height: 100vh; /* Memastikan elemen memiliki tinggi minimal 100% dari viewport */
 }
+
+/* Efek gradasi untuk latar belakang */
+#wrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(204, 0, 0, 0.8),
+    rgba(255, 51, 51, 0.6)
+  ); /* Gradasi merah modern dan menarik */
+  position: relative;
+}
+/* Menata konten di dalam wrapper */
+#content-wrapper {
+  background-color: rgba(
+    105,
+    25,
+    25,
+    0.85
+  ); /* Sedikit transparan agar tidak terlalu gelap */
+  border-radius: 10px; /* Sudut membulat untuk kesan modern */
+  padding: 30px; /* Memberikan jarak yang cukup di dalam content-wrapper */
+  margin: 20px auto; /* Menjaga margin di sekitar konten */
+  max-width: 1200px; /* Maksimal lebar konten untuk tampilan desktop */
+  box-sizing: border-box; /* Padding dihitung dalam ukuran total */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Memberikan bayangan lembut untuk kedalaman */
+  transition: all 0.3s ease; /* Transisi halus pada perubahan efek */
+}
+
+/* Efek hover pada content-wrapper */
+#content-wrapper:hover {
+  transform: translateY(-5px); /* Efek mengangkat saat hover */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Bayangan lebih dalam saat hover */
+}
+
+/* Responsif pada layar kecil */
+@media (max-width: 768px) {
+  #content-wrapper {
+    padding: 15px; /* Padding lebih kecil pada layar kecil */
+    margin: 10px; /* Margin lebih kecil agar konten tetap pas */
+  }
+}
+
 #wrapper #content-wrapper #content {
   flex: 1 0 auto;
 }
