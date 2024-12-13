@@ -1,35 +1,30 @@
 <?php
 // Koneksi ke database
-include 'koneksibarang.php'; // Pastikan koneksi ke database sudah benar
+include('koneksibarang.php');
 
-// Cek apakah ada ID aset yang diterima dari URL (untuk menghapus aset tertentu)
-if (isset($_GET['id_aset'])) {
-    $id_aset = $_GET['id_aset'];
+// Cek apakah ada parameter 'id' di URL
+if (isset($_GET['id'])) {
+    // Ambil ID aset dari URL
+    $id_aset = $_GET['id'];
 
-    // Query untuk menghapus data aset
-    $query = "DELETE FROM aset WHERE id_aset = ?";
-
-    // Siapkan statement untuk menghindari SQL injection
-    if ($stmt = $koneksi->prepare($query)) {
-        // Bind parameter
-        $stmt->bind_param("i", $id_aset);
-
-        // Eksekusi query
-        if ($stmt->execute()) {
-            // Jika berhasil, alihkan kembali ke halaman utama atau halaman asset management
+    // Query untuk mengecek apakah aset dengan ID tersebut ada di database
+    $sql_check = $koneksi->query("SELECT * FROM aset WHERE id = '$id_aset'");
+    if ($sql_check->num_rows > 0) {
+        // Aset ditemukan, lakukan penghapusan
+        $sql_delete = $koneksi->query("DELETE FROM aset WHERE id = '$id_aset'");
+        if ($sql_delete) {
+            // Redirect setelah berhasil menghapus data
             echo "<script>alert('Data aset berhasil dihapus!'); window.location.href='?page=aset';</script>";
         } else {
-            // Jika gagal, tampilkan pesan error
-            echo "<script>alert('Gagal menghapus data aset!'); window.location.href='?page=aset';</script>";
+            // Jika terjadi kesalahan dalam penghapusan
+            echo "<script>alert('Terjadi kesalahan saat menghapus data aset!'); window.history.back();</script>";
         }
-
-        // Tutup statement
-        $stmt->close();
     } else {
-        echo "<script>alert('Terjadi kesalahan!'); window.location.href='?page=aset';</script>";
+        // Jika aset tidak ditemukan
+        echo "<script>alert('Aset tidak ditemukan!'); window.history.back();</script>";
     }
 } else {
-    echo "<script>alert('ID Aset tidak ditemukan!'); window.location.href='?page=aset';</script>";
-    exit;
+    // Jika parameter 'id' tidak ditemukan di URL
+    echo "<script>alert('ID aset tidak ditemukan!'); window.history.back();</script>";
 }
 ?>

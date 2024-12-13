@@ -5,12 +5,13 @@
             <h6 class="m-0 font-weight-bold text-primary">Asset Management</h6>
         </div>
         <div class="card-body">
-            <!-- Tombol Tambah Aset -->
+            <!-- Tombol Tambah Barang -->
             <div class="mb-3">
                 <a href="?page=aset&aksi=tambahaset" class="btn btn-primary custom-btn">
                     <i class="fas fa-plus me-2"></i> Tambah Aset
                 </a>
             </div>
+
 
             <!-- Filter Tanggal dan Status -->
             <div class="row mb-3">
@@ -22,10 +23,11 @@
                         <input type="date" id="max" name="max" class="form-control">
                     </div>
                 </div>
+                <!-- Filter Status -->
                 <div class="col-md-6">
                     <div class="input-group">
                         <span class="input-group-text">Status</span>
-                        <select id="status_filter" class="form-control">
+                        <select id="statusFilter" name="status" class="form-control">
                             <option value="">Semua</option>
                             <option value="Aktif">Aktif</option>
                             <option value="Tidak Aktif">Tidak Aktif</option>
@@ -33,19 +35,20 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Tabel Asset Management -->
+            <!-- Tabel Barang Masuk -->
             <div class="table-responsive">
-                <table class="table table-bordered" id="assetTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="aset" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th style="width: 50px; text-align: center;">No</th>
                             <th style="width: 150px; text-align: center;">Kode Aset</th>
-                            <th style="width: 150px; text-align: center;">Jenis Barang</th> <!-- Kolom Jenis Barang -->
-                            <th style="width: 200px; text-align: center;">Nama Aset</th>
-                            <th style="width: 100px; text-align: center;">Departemen</th>
-                            <th style="width: 150px; text-align: center;">Tanggal Pembelian</th>
+                            <th style="width: 150px; text-align: center;">Kode Lengkap</th>
+                            <th style="width: 150px; text-align: center;">Nama Aset</th>
+                            <th style="width: 150px; text-align: center;">Departemen</th>
+                            <th style="width: 100px; text-align: center;">Karyawan</th>
+                            <th style="width: 200px; text-align: center;">Lokasi</th>
                             <th style="width: 100px; text-align: center;">Status</th>
+                            <th style="width: 150px; text-align: center;">Tanggal Pembelian</th>
                             <th style="width: 100px; text-align: center;">Kondisi</th>
                             <th style="width: 200px; text-align: center;">Pengaturan</th>
                         </tr>
@@ -53,36 +56,41 @@
                     <tbody>
                         <?php
                         $no = 1;
-                        $sql = "SELECT a.*, d.nama AS departemen, k.nama AS karyawan, j.jenis_barang 
-                        FROM aset a
-                         LEFT JOIN departemen d ON a.departemen_id = d.id
-                         LEFT JOIN daftar_karyawan k ON a.karyawan_id = k.id
-                         LEFT JOIN jenis_barang j ON a.kode_aset = j.code_barang"; // Query yang sudah diperbarui
-                        $result = $koneksi->query($sql);
-                        while ($data = $result->fetch_assoc()) {
-                            ?>
-                            <tr>
-                                <td style="text-align: center;"><?php echo $no++; ?></td>
-                                <td style="text-align: center;"><?php echo $data['kode_aset'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['jenis_barang'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['nama_aset'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['departemen'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['tanggal_pembelian'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['status'] ?></td>
-                                <td style="text-align: center;"><?php echo $data['kondisi'] ?></td>
-                                <td style="text-align: center;">
-                                    <a href="?page=aset&aksi=ubahaset&id_aset=<?php echo $data['id_aset']; ?>"
-                                        class="btn btn-info btn-sm custom-btn">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <a href="?page=aset&aksi=hapusaset&id_aset=<?php echo $data['id_aset']; ?>"
-                                        class="btn btn-danger btn-sm custom-btn"
-                                        onclick="return confirm('Apakah anda yakin ingin menghapus aset ini?')">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                        $sql = $koneksi->query("SELECT aset.*, daftar_karyawan.nama AS nama_karyawan, 
+                                daftar_karyawan.bagian, departemen.nama AS nama_departemen 
+                        FROM aset
+                        LEFT JOIN daftar_karyawan ON aset.karyawan_id = daftar_karyawan.id
+                        LEFT JOIN departemen ON aset.departemen_id = departemen.id");
+                        if ($sql === false) {
+                            die('Error SQL: ' . $koneksi->error); // Tampilkan pesan error jika query gagal
+                        } else
+                            while ($data = $sql->fetch_assoc()) {
+                                ?>
+                                <tr>
+                                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                                    <td style="text-align: center;"><?php echo $data['kode_aset'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['kode_lengkap'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['nama_aset'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['nama_departemen'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['lokasi'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['status'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['tanggal_pembelian'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['nama_karyawan'] ?></td>
+                                    <td style="text-align: center;"><?php echo $data['kondisi'] ?></td>
+                                    <td style="text-align: center;">
+                                        <a href="?page=aset&aksi=ubahaset&id=<?php echo $data['id']; ?>"
+                                            class="btn btn-info btn-sm custom-btn">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <a href="?page=aset&aksi=hapusaset&id=<?php echo $data['id']; ?>"
+                                            class="btn btn-danger btn-sm custom-btn"
+                                            onclick="return confirm('Apakah anda yakin akan menghapus data ini?')">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -92,6 +100,7 @@
 
 <!-- CSS for Custom Button Styling -->
 <style>
+    /* Custom button styling */
     .custom-btn {
         background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         color: white;
@@ -100,30 +109,96 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
+    /* Button hover effect */
     .custom-btn:hover {
         transform: scale(1.05);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
 
+    /* Button focus effect */
     .custom-btn:focus {
         outline: none;
         box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
     }
 
+    /* Tooltip */
+    .custom-btn[data-bs-toggle="tooltip"] {
+        position: relative;
+    }
+
+    /* Style for the table buttons */
     .btn-sm {
         font-size: 0.9rem;
     }
 
+    /* Button spacing in table */
     .btn-sm i {
+        margin-right: 5px;
+    }
+
+    /* Buttons for the DataTable */
+    .dt-buttons .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 0.875rem;
+        padding: 5px 10px;
+        margin: 0 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .dt-buttons .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .dt-buttons .btn i {
         margin-right: 5px;
     }
 </style>
 
+<!-- Tooltip Initialization (Bootstrap 5) -->
+<script>
+    var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
 <!-- DataTable Initialization Script -->
 <script>
     $(document).ready(function () {
-        var table = $('#assetTable').DataTable({
+        var table = $('#aset').DataTable({
             dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Copy',
+                    className: 'btn btn-secondary btn-sm'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'btn btn-secondary btn-sm'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-secondary btn-sm'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-secondary btn-sm'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print"></i> Print',
+                    className: 'btn btn-secondary btn-sm'
+                }
+            ],
             language: {
                 search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ data per halaman",
@@ -138,36 +213,42 @@
                     previous: "Sebelumnya"
                 }
             },
-            order: [[4, 'desc']] // Urutkan berdasarkan tanggal pembelian
+            order: [[2, 'desc']]
         });
 
-        // Filter berdasarkan status dan tanggal
+        // Menambahkan filter berdasarkan tanggal
         $.fn.dataTable.ext.search.push(
             function (settings, data, dataIndex) {
-                var min = $('#min').val();        // Tanggal awal
-                var max = $('#max').val();        // Tanggal akhir
-                var status = $('#status_filter').val();  // Status filter
-                var date = data[5];  // Tanggal Pembelian (kolom ke-6)
-                var itemStatus = data[6]; // Status (kolom ke-7, indeks 6)
+                var min = $('#min').val();
+                var max = $('#max').val();
+                var date = data[6]; // Kolom Tanggal Pembelian (index 6)
 
-                // Pastikan format tanggalnya sesuai
-                if (min !== "" && date < min) return false;
-                if (max !== "" && date > max) return false;
-
-                // Memeriksa status jika status filter dipilih
-                if (status !== "" && itemStatus.trim().toLowerCase() !== status.trim().toLowerCase()) {
-                    return false;
-                }
-
-                // Jika semua kondisi lolos, tampilkan baris
-                return true;
+                if (min === "" && max === "") return true;
+                if (min === "") return date <= max;
+                if (max === "") return date >= min;
+                return date >= min && date <= max;
             }
         );
 
-        // Update tabel ketika ada perubahan di filter
-        $('#min, #max, #status_filter').on('change', function () {
+        // Menambahkan filter berdasarkan status
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var statusFilter = $('#statusFilter').val();
+                var status = data[5]; // Kolom Status (index 5)
+
+                if (statusFilter === "") return true; // Jika tidak ada filter, tampilkan semua
+                return status === statusFilter;
+            }
+        );
+
+        // Event listener untuk filter tanggal
+        $('#min, #max').on('change', function () {
+            table.draw();
+        });
+
+        // Event listener untuk filter status
+        $('#statusFilter').on('change', function () {
             table.draw();
         });
     });
-
 </script>

@@ -1,244 +1,257 @@
 <?php
 // Koneksi ke database
-include 'koneksibarang.php'; // Pastikan file koneksibarang.php sudah ada dan berfungsi dengan baik
+include('koneksibarang.php');
 
-// Proses simpan data aset
-if (isset($_POST['submit'])) {
-    // Ambil data dari form
-    $kode_aset = htmlspecialchars($_POST['kode_aset']);
-    $nama_aset = htmlspecialchars($_POST['nama_aset']);
-    $departemen_id = $_POST['departemen_id']; // Departemen ID
-    $lokasi = htmlspecialchars($_POST['lokasi']);
-    $status = $_POST['status']; // Status Aset
-    $tanggal_pembelian = $_POST['tanggal_pembelian'];
-    $karyawan_id = $_POST['karyawan_id']; // ID Karyawan yang mengelola atau bertanggung jawab terhadap aset
-    $kondisi = $_POST['kondisi']; // Kondisi Aset
+// Mengecek apakah form sudah disubmit
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Memeriksa apakah 'kode_aset' dan 'nomor_urut' ada dalam form
+    $kode_aset = isset($_POST['kode_aset']) ? $_POST['kode_aset'] : '';
+    $nomor_urut = isset($_POST['nomor_urut']) ? $_POST['nomor_urut'] : '';
 
-    // Query untuk memasukkan data ke tabel aset
-    $query = "INSERT INTO aset (kode_aset, nama_aset, departemen_id, lokasi, status, tanggal_pembelian, karyawan_id, kondisi)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-    // Prepare statement
-    if ($stmt = $koneksi->prepare($query)) {
-        // Bind parameters
-        $stmt->bind_param("ssisssis", $kode_aset, $nama_aset, $departemen_id, $lokasi, $status, $tanggal_pembelian, $karyawan_id, $kondisi);
-
-        // Eksekusi query
-        if ($stmt->execute()) {
-            echo "<script>alert('Aset berhasil ditambahkan!'); window.location.href='?page=aset';</script>";
-        } else {
-            echo "<script>alert('Gagal menambahkan aset!');</script>";
-        }
-
-        // Tutup statement
-        $stmt->close();
+    // Pastikan nomor urut diberikan jika kode aset dipilih
+    if ($kode_aset && $nomor_urut) {
+        // Format nomor urut dengan padding 4 digit
+        $nomor_urut = str_pad($nomor_urut, 4, '0', STR_PAD_LEFT);
+        $kode_lengkap = $kode_aset . '/' . $nomor_urut; // Gabungkan kode aset dan nomor urut
     } else {
-        echo "<script>alert('Terjadi kesalahan!');</script>";
+        $kode_lengkap = ''; // Tidak ada kode lengkap jika tidak ada kode aset atau nomor urut
+    }
+
+
+    // Ambil data lainnya dari form
+    $nama_aset = $_POST['nama_aset'];
+    $departemen_id = $_POST['departemen_id'];
+    $lokasi = $_POST['lokasi'];
+    $status = $_POST['status'];
+    $tanggal_pembelian = $_POST['tanggal_pembelian'];
+    $karyawan_id = $_POST['karyawan_id'];
+    $kondisi = $_POST['kondisi'];
+
+    // Validasi karyawan_id
+    $karyawan_check = $koneksi->query("SELECT id FROM daftar_karyawan WHERE id = '$karyawan_id'");
+    if ($karyawan_check->num_rows == 0) {
+        echo "<script>alert('Karyawan dengan ID tersebut tidak ditemukan!'); window.location.href = '?page=tambah-aset';</script>";
+        exit; // Menghentikan proses jika karyawan tidak ditemukan
+    }
+
+    // Mengecek apakah kode aset sudah ada di database
+    $cek_kode_aset = $koneksi->query("SELECT * FROM aset WHERE kode_lengkap = '$kode_lengkap'");
+    if ($cek_kode_aset->num_rows > 0) {
+        echo "<script>alert('Kode aset sudah ada, harap pilih nomor urut yang berbeda.'); window.location.href = '?page=tambah-aset';</script>";
+        exit;
+    }
+
+    // Query untuk menyimpan data ke database
+    $sql = "INSERT INTO aset (kode_aset, kode_lengkap, nama_aset, departemen_id, lokasi, status, tanggal_pembelian, karyawan_id, kondisi) 
+            VALUES ('$kode_aset', '$kode_lengkap', '$nama_aset', '$departemen_id', '$lokasi', '$status', '$tanggal_pembelian', '$karyawan_id', '$kondisi')";
+
+    if ($koneksi->query($sql) === TRUE) {
+        echo "<script>alert('Data aset berhasil ditambahkan!'); window.location.href='?page=aset';</script>";
+    } else {
+        echo "Error: " . $sql . "<br>" . $koneksi->error;
     }
 }
 
-// Ambil data kode_barang dan jenis_barang dari tabel jenis_barang
-$query_jenis_barang = "SELECT code_barang, jenis_barang FROM jenis_barang";
-$result_jenis_barang = $koneksi->query($query_jenis_barang);
-$kode_aset_terakhir = [];
-
-if ($result_jenis_barang->num_rows > 0) {
-    while ($row = $result_jenis_barang->fetch_assoc()) {
-        // Ambil kode barang dan jenis barang
-        $jenis_barang = $row['jenis_barang'];
-        $kode_barang = $row['code_barang'];
-
-        // Ambil nomor urut terakhir berdasarkan jenis barang
-        $query_last_code = "SELECT MAX(SUBSTRING(code_aset, -4)) AS last_code FROM aset WHERE code_aset LIKE '$kode_barang%'";
-        $result_last_code = $koneksi->query($query_last_code);
-
-        if ($result_last_code->num_rows > 0) {
-            $last_code = $result_last_code->fetch_assoc();
-            $last_code_value = $last_code['last_code'] ? (int) $last_code['last_code'] : 0;
-            $next_code = str_pad($last_code_value + 1, 4, '0', STR_PAD_LEFT);
-        } else {
-            // Jika belum ada kode aset untuk jenis ini, mulai dari 0001
-            $next_code = '0001';
-        }
-
-        // Simpan kode aset terakhir yang tersedia
-        $kode_aset_terakhir[$kode_barang] = $kode_barang . "/" . $next_code;
-    }
-}
 ?>
 
-<!-- Form untuk tambah aset -->
+
+
+<!-- Halaman Form Tambah Aset -->
+<!-- Halaman Form Tambah Aset -->
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Tambah Aset</h6>
         </div>
         <div class="card-body">
-            <form method="POST" action="">
-                <!-- Kode Aset -->
+            <form method="POST">
+                <!-- Input untuk Kode Aset -->
                 <div class="mb-3">
                     <label for="kode_aset" class="form-label">Kode Aset</label>
                     <select class="form-control" id="kode_aset" name="kode_aset" required>
-                        <option value="">Pilih Kode Aset atau Masukkan Kode Baru</option>
+                        <option value="">Pilih Kode Aset</option>
                         <?php
-                        // Ambil data kode_barang dari tabel jenis_barang
-                        $query_jenis_barang = "SELECT code_barang, jenis_barang FROM jenis_barang";
-                        $result_jenis_barang = $koneksi->query($query_jenis_barang);
-                        if ($result_jenis_barang->num_rows > 0) {
-                            while ($row = $result_jenis_barang->fetch_assoc()) {
-                                echo "<option value='" . htmlspecialchars($row['code_barang']) . "' data-jenis='" . htmlspecialchars($row['jenis_barang']) . "'>" . htmlspecialchars($row['code_barang']) . "</option>";
-                            }
-                        } else {
-                            echo "<option value=''>Tidak ada kode aset</option>";
+                        // Ambil data Kode Aset dari tabel jenis_barang
+                        $sql = $koneksi->query("SELECT * FROM jenis_barang");
+                        while ($data = $sql->fetch_assoc()) {
+                            echo "<option value='" . $data['code_barang'] . "'>" . $data['code_barang'] . " - " . $data['jenis_barang'] . "</option>";
                         }
                         ?>
                     </select>
                 </div>
 
-                <!-- Gabungkan Kode Aset dan Jenis Barang -->
-                <div class="mb-3">
-                    <label for="kode_jenis_barang" class="form-label">Kode Aset dan Jenis Barang</label>
-                    <input type="text" class="form-control" id="kode_jenis_barang" name="kode_jenis_barang" readonly>
+                <!-- Tempat untuk menampilkan input Nomor Urut -->
+                <div id="nomor_urut_container" class="mb-3" style="display:none;">
+                    <label for="nomor_urut" class="form-label">Nomor Urut Kode Aset</label>
+                    <input type="number" class="form-control" id="nomor_urut" name="nomor_urut"
+                        placeholder="Masukkan Nomor Urut" min="1" required>
                 </div>
 
+                <!-- Tempat untuk menampilkan Kode Aset Lengkap -->
+                <div class="mb-3">
+                    <label for="kode_lengkap" class="form-label">Kode Aset Lengkap</label>
+                    <input type="text" class="form-control" id="kode_lengkap" name="kode_lengkap" readonly>
+                </div>
 
+                <script>
+                    // JavaScript untuk menampilkan input nomor urut ketika memilih kode aset
+                    document.getElementById('kode_aset').addEventListener('change', function () {
+                        var kodeAset = this.value;
+                        var nomorUrutContainer = document.getElementById('nomor_urut_container');
+                        var kodeLengkap = document.getElementById('kode_lengkap');
 
-                <!-- Nama Aset -->
+                        if (kodeAset !== "") {
+                            // Tampilkan input nomor urut jika kode aset dipilih
+                            nomorUrutContainer.style.display = "block";
+                            kodeLengkap.value = kodeAset + "/"; // Set kode aset yang dipilih pada bagian kode lengkap
+                        } else {
+                            // Sembunyikan input nomor urut jika tidak ada kode aset yang dipilih
+                            nomorUrutContainer.style.display = "none";
+                            kodeLengkap.value = "";
+                        }
+                    });
+
+                    // Menangani perubahan pada input nomor urut
+                    document.getElementById('nomor_urut').addEventListener('input', function () {
+                        var kodeAset = document.getElementById('kode_aset').value;
+                        var nomorUrut = this.value;
+                        var kodeLengkap = document.getElementById('kode_lengkap');
+
+                        if (kodeAset && nomorUrut) {
+                            // Format nomor urut menjadi 4 digit (misalnya 0001, 0002, ...)
+                            var nomorUrutFormatted = nomorUrut.padStart(4, '0');
+                            kodeLengkap.value = kodeAset + "/" + nomorUrutFormatted;
+
+                            // Mengecek apakah kode lengkap sudah ada di database
+                            checkIfKodeAsetExists(kodeLengkap.value);
+                        }
+                    });
+
+                    // Fungsi untuk memeriksa apakah kode aset lengkap sudah ada di database
+                    function checkIfKodeAsetExists(kodeLengkap) {
+                        // Melakukan request ke server untuk memeriksa apakah kode lengkap sudah ada
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "check_kode_aset.php", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                var response = xhr.responseText.trim();
+                                if (response === "exists") {
+                                    alert("Kode Aset ini sudah ada. Silakan pilih nomor urut yang berbeda.");
+                                    document.getElementById('nomor_urut').value = ''; // Reset nomor urut
+                                    document.getElementById('kode_lengkap').value = kodeAset + "/";
+                                }
+                            }
+                        };
+                        xhr.send("kode_lengkap=" + encodeURIComponent(kodeLengkap));
+                    }
+                </script>
+
+                <!-- Input untuk Nama Aset -->
                 <div class="mb-3">
                     <label for="nama_aset" class="form-label">Nama Aset</label>
                     <input type="text" class="form-control" id="nama_aset" name="nama_aset" required>
                 </div>
 
-                <!-- Pilih Departemen -->
+                <!-- Input untuk Departemen -->
                 <div class="mb-3">
                     <label for="departemen_id" class="form-label">Departemen</label>
-                    <select class="form-control select2" id="departemen_id" name="departemen_id" required>
+                    <select class="form-control" id="departemen_id" name="departemen_id" required>
                         <option value="">Pilih Departemen</option>
                         <?php
-                        $query_departemen = "SELECT id, nama FROM departemen";
-                        $result_departemen = $koneksi->query($query_departemen);
-                        if ($result_departemen->num_rows > 0) {
-                            while ($row = $result_departemen->fetch_assoc()) {
-                                echo "<option value='" . htmlspecialchars($row['id']) . "'>" . htmlspecialchars($row['nama']) . "</option>";
-                            }
-                        } else {
-                            echo "<option value=''>Tidak ada departemen</option>";
+                        $sql = $koneksi->query("SELECT * FROM departemen ORDER BY nama");
+                        while ($data = $sql->fetch_assoc()) {
+                            echo "<option value='" . $data['id'] . "'>" . htmlspecialchars($data['nama']) . "</option>";
                         }
                         ?>
-
-                        <!-- Gunakan Select2 versi terbaru -->
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
-                            rel="stylesheet" />
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-                        <script>
-                            $(document).ready(function () {
-                                // Inisialisasi Select2 untuk Departemen dengan filter
-                                $('#departemen_id').select2({
-                                    placeholder: "Pilih Departemen",  // Placeholder untuk dropdown
-                                    allowClear: true,                 // Mengizinkan pengguna memilih 'kosong'
-                                    width: '100%',                    // Membuat dropdown selebar kontainer
-                                    theme: 'classic'                  // Tema klasik Select2 (sesuaikan jika diperlukan)
-                                });
-
-                                // Inisialisasi Select2 untuk Karyawan dengan filter
-                                $('#karyawan_id').select2({
-                                    placeholder: "Pilih Karyawan",    // Placeholder untuk dropdown
-                                    allowClear: true,                 // Mengizinkan pengguna memilih 'kosong'
-                                    width: '100%',                    // Membuat dropdown selebar kontainer
-                                    theme: 'classic'                  // Tema klasik Select2
-                                });
-
-
-                                // Inisialisasi Select2 untuk elemen lainnya jika ada
-                                $('.select2').select2({
-                                    placeholder: "Pilih",
-                                    allowClear: true
-                                });
-                            });
-                        </script>
-
                     </select>
                 </div>
 
-                <!-- Lokasi Aset -->
+                <!-- Input untuk Karyawan -->
                 <div class="mb-3">
-                    <label for="lokasi" class="form-label">Lokasi Aset</label>
+                    <label for="karyawan_id" class="form-label">Karyawan</label>
+                    <select class="form-control" id="karyawan_id" name="karyawan_id" required>
+                        <option value="">Pilih Karyawan</option>
+                        <?php
+                        // Ambil data Karyawan dari tabel daftar_karyawan
+                        $sql = $koneksi->query("SELECT * FROM daftar_karyawan");
+                        while ($data = $sql->fetch_assoc()) {
+                            echo "<option value='" . $data['id'] . "'>" . htmlspecialchars($data['nama']) . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- Input untuk Lokasi -->
+                <div class="mb-3">
+                    <label for="lokasi" class="form-label">Lokasi</label>
                     <input type="text" class="form-control" id="lokasi" name="lokasi" required>
                 </div>
 
-                <!-- Status Aset -->
+                <!-- Input untuk Status -->
                 <div class="mb-3">
-                    <label for="status" class="form-label">Status Aset</label>
-                    <select class="form-control" id="status" name="status" required>
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control" required>
                         <option value="Aktif">Aktif</option>
                         <option value="Tidak Aktif">Tidak Aktif</option>
                     </select>
                 </div>
 
-                <!-- Tanggal Pembelian -->
+                <!-- Input untuk Tanggal Pembelian -->
                 <div class="mb-3">
                     <label for="tanggal_pembelian" class="form-label">Tanggal Pembelian</label>
                     <input type="date" class="form-control" id="tanggal_pembelian" name="tanggal_pembelian" required>
                 </div>
 
-                <!-- Karyawan yang bertanggung jawab -->
+                <!-- Input untuk Kondisi -->
                 <div class="mb-3">
-                    <label for="karyawan_id" class="form-label">Karyawan</label>
-                    <select class="form-control select2" id="karyawan_id" name="karyawan_id" required>
-                        <option value="">Pilih Karyawan</option>
-                        <?php
-                        // Ambil data karyawan dari tabel daftar_karyawan
-                        $query_karyawan = "SELECT id, nama FROM daftar_karyawan";
-                        $result_karyawan = $koneksi->query($query_karyawan);
-                        while ($row = $result_karyawan->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['id']) . "'>" . htmlspecialchars($row['nama']) . "</option>";
-                        }
-                        ?>
-
-
-
-
-
-
-                    </select>
-                </div>
-
-
-                <!-- Kondisi Aset -->
-                <div class="mb-3">
-                    <label for="kondisi" class="form-label">Kondisi Aset</label>
-                    <select class="form-control" id="kondisi" name="kondisi" required>
+                    <label for="kondisi" class="form-label">Kondisi</label>
+                    <select id="kondisi" name="kondisi" class="form-control" required>
                         <option value="Baik">Baik</option>
                         <option value="Rusak">Rusak</option>
-                        <option value="Perlu Perawatan">Perlu Perawatan</option>
                     </select>
                 </div>
 
-                <button type="submit" name="submit" class="btn btn-primary custom-btn">
-                    <i class="fas fa-save me-2"></i> Simpan Aset
-                </button>
+                <!-- Tombol Submit -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary custom-btn">
+                        <i class="fas fa-save me-2"></i> Simpan Aset
+                    </button>
+                    <a href="?page=aset" class="btn btn-secondary custom-btn">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+                </div>
             </form>
         </div>
-
     </div>
-    <script>
-        // Fungsi untuk memperbarui input gabungan kode aset dan jenis barang
-        document.getElementById('kode_aset').addEventListener('change', function () {
-            var kodeAset = this.value;
-            var jenisBarang = this.options[this.selectedIndex].getAttribute('data-jenis');  // Ambil jenis barang dari atribut data
-
-            // Gabungkan kode aset dan jenis barang ke dalam input baru
-            if (kodeAset !== "" && jenisBarang) {
-                document.getElementById('kode_jenis_barang').value = kodeAset + " - " + jenisBarang;
-            } else {
-                document.getElementById('kode_jenis_barang').value = ''; // Kosongkan jika tidak ada kode aset
-            }
-        });
-    </script>
-
 </div>
 
-<!-- Gunakan Select2 versi terbaru -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<!-- CSS untuk Styling Form -->
+<style>
+    .custom-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .custom-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+
+    .form-control {
+        border-radius: 0.375rem;
+    }
+
+    /* Styling untuk form label */
+    .form-label {
+        font-weight: bold;
+    }
+</style>

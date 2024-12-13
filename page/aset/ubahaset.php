@@ -1,124 +1,128 @@
 <?php
 // Koneksi ke database
-include 'koneksibarang.php'; // Pastikan koneksi ke database sudah benar
+include('koneksibarang.php');
 
-// Cek apakah ada ID aset yang diterima dari URL (untuk mengedit aset tertentu)
-if (isset($_GET['id_aset'])) {
-    $id_aset = $_GET['id_aset'];
+// Cek apakah ada parameter 'id' di URL
+if (isset($_GET['id'])) {
+    $id_aset = $_GET['id'];
 
-    // Ambil data aset yang akan diubah
-    $query = "SELECT * FROM aset WHERE id_aset = ?";
-    if ($stmt = $koneksi->prepare($query)) {
-        $stmt->bind_param("i", $id_aset);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Jika aset ditemukan
-        if ($result->num_rows > 0) {
-            $data_aset = $result->fetch_assoc();
-        } else {
-            echo "<script>alert('Aset tidak ditemukan!'); window.location.href='?page=aset';</script>";
-            exit;
-        }
-
-        $stmt->close();
+    // Query untuk mengambil data aset berdasarkan ID
+    $sql = $koneksi->query("SELECT aset.*, daftar_karyawan.nama AS nama_karyawan, departemen.nama AS nama_departemen 
+                            FROM aset
+                            LEFT JOIN daftar_karyawan ON aset.karyawan_id = daftar_karyawan.id
+                            LEFT JOIN departemen ON aset.departemen_id = departemen.id
+                            WHERE aset.id = '$id_aset'");
+    if ($sql->num_rows > 0) {
+        $data = $sql->fetch_assoc();
     } else {
-        echo "<script>alert('Terjadi kesalahan!'); window.location.href='?page=aset';</script>";
+        // Jika aset tidak ditemukan
+        echo "<script>alert('Aset tidak ditemukan!'); window.location.href='?page=aset';</script>";
         exit;
     }
 } else {
-    echo "<script>alert('ID Aset tidak ditemukan!'); window.location.href='?page=aset';</script>";
+    // Jika ID tidak ditemukan
+    echo "<script>alert('ID aset tidak ditemukan!'); window.location.href='?page=aset';</script>";
     exit;
 }
 
-// Proses simpan perubahan data aset
+// Proses pembaruan data aset
 if (isset($_POST['submit'])) {
-    // Ambil data dari form
-    $kode_aset = htmlspecialchars($_POST['kode_aset']);
-    $nama_aset = htmlspecialchars($_POST['nama_aset']);
-    $departemen_id = $_POST['departemen_id']; // Departemen ID
-    $lokasi = htmlspecialchars($_POST['lokasi']);
-    $status = $_POST['status']; // Status Aset
+    $kode_aset = $_POST['kode_aset'];
+    $nama_aset = $_POST['nama_aset'];
+    $departemen_id = $_POST['departemen_id'];
+    $lokasi = $_POST['lokasi'];
+    $status = $_POST['status'];
     $tanggal_pembelian = $_POST['tanggal_pembelian'];
-    $karyawan_id = $_POST['karyawan_id']; // ID Karyawan yang mengelola atau bertanggung jawab terhadap aset
-    $kondisi = $_POST['kondisi']; // Kondisi Aset
+    $karyawan_id = $_POST['karyawan_id'];
+    $kondisi = $_POST['kondisi'];
 
-    // Query untuk update data aset
-    $query = "UPDATE aset SET kode_aset = ?, nama_aset = ?, departemen_id = ?, lokasi = ?, status = ?, tanggal_pembelian = ?, karyawan_id = ?, kondisi = ? WHERE id_aset = ?";
+    // Query untuk memperbarui data aset
+    $sql_update = $koneksi->query("UPDATE aset SET 
+        kode_aset = '$kode_aset', 
+        nama_aset = '$nama_aset', 
+        departemen_id = '$departemen_id', 
+        lokasi = '$lokasi', 
+        status = '$status', 
+        tanggal_pembelian = '$tanggal_pembelian', 
+        karyawan_id = '$karyawan_id', 
+        kondisi = '$kondisi' 
+        WHERE id = '$id_aset'");
 
-    // Prepare statement
-    if ($stmt = $koneksi->prepare($query)) {
-        // Bind parameters
-        $stmt->bind_param("ssisssisi", $kode_aset, $nama_aset, $departemen_id, $lokasi, $status, $tanggal_pembelian, $karyawan_id, $kondisi, $id_aset);
-
-        // Eksekusi query
-        if ($stmt->execute()) {
-            echo "<script>alert('Data aset berhasil diubah!'); window.location.href='?page=aset';</script>";
-        } else {
-            echo "<script>alert('Gagal mengubah data aset!');</script>";
-        }
-
-        // Tutup statement
-        $stmt->close();
+    if ($sql_update) {
+        echo "<script>alert('Data aset berhasil diperbarui!'); window.location.href='?page=aset';</script>";
     } else {
-        echo "<script>alert('Terjadi kesalahan!');</script>";
+        echo "<script>alert('Terjadi kesalahan saat memperbarui data!'); window.history.back();</script>";
     }
 }
 ?>
 
-<!-- Form untuk ubah aset -->
+<!-- Formulir Ubah Aset -->
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Ubah Aset</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Ubah Data Aset</h6>
         </div>
         <div class="card-body">
             <form method="POST" action="">
-
                 <!-- Kode Aset -->
                 <div class="mb-3">
                     <label for="kode_aset" class="form-label">Kode Aset</label>
                     <input type="text" class="form-control" id="kode_aset" name="kode_aset"
-                        value="<?php echo htmlspecialchars($data_aset['kode_aset']); ?>" required>
+                        value="<?php echo $data['kode_aset']; ?>" required>
                 </div>
 
                 <!-- Nama Aset -->
                 <div class="mb-3">
                     <label for="nama_aset" class="form-label">Nama Aset</label>
                     <input type="text" class="form-control" id="nama_aset" name="nama_aset"
-                        value="<?php echo htmlspecialchars($data_aset['nama_aset']); ?>" required>
+                        value="<?php echo $data['nama_aset']; ?>" required>
                 </div>
 
-                <!-- Pilih Departemen -->
+                <!-- Departemen -->
                 <div class="mb-3">
                     <label for="departemen_id" class="form-label">Departemen</label>
                     <select class="form-control" id="departemen_id" name="departemen_id" required>
                         <?php
-                        // Ambil data departemen dari tabel departemen
-                        $query_departemen = "SELECT id, nama FROM departemen";
-                        $result_departemen = $koneksi->query($query_departemen);
-                        while ($row = $result_departemen->fetch_assoc()) {
-                            $selected = ($row['id'] == $data_aset['departemen_id']) ? 'selected' : '';
-                            echo "<option value='" . htmlspecialchars($row['id']) . "' $selected>" . htmlspecialchars($row['nama']) . "</option>";
+                        // Mengambil daftar departemen
+                        $sql_departemen = $koneksi->query("SELECT * FROM departemen");
+                        while ($departemen = $sql_departemen->fetch_assoc()) {
+                            $selected = ($departemen['id'] == $data['departemen_id']) ? 'selected' : '';
+                            echo "<option value='{$departemen['id']}' {$selected}>{$departemen['nama']}</option>";
                         }
                         ?>
                     </select>
                 </div>
 
-                <!-- Lokasi Aset -->
+                <!-- Karyawan -->
                 <div class="mb-3">
-                    <label for="lokasi" class="form-label">Lokasi Aset</label>
-                    <input type="text" class="form-control" id="lokasi" name="lokasi"
-                        value="<?php echo htmlspecialchars($data_aset['lokasi']); ?>" required>
+                    <label for="karyawan_id" class="form-label">Karyawan</label>
+                    <select class="form-control" id="karyawan_id" name="karyawan_id" required>
+                        <?php
+                        // Mengambil daftar karyawan
+                        $sql_karyawan = $koneksi->query("SELECT * FROM daftar_karyawan");
+                        while ($karyawan = $sql_karyawan->fetch_assoc()) {
+                            $selected = ($karyawan['id'] == $data['karyawan_id']) ? 'selected' : '';
+                            echo "<option value='{$karyawan['id']}' {$selected}>{$karyawan['nama']}</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
 
-                <!-- Status Aset -->
+
+                <!-- Lokasi -->
                 <div class="mb-3">
-                    <label for="status" class="form-label">Status Aset</label>
+                    <label for="lokasi" class="form-label">Lokasi</label>
+                    <input type="text" class="form-control" id="lokasi" name="lokasi"
+                        value="<?php echo $data['lokasi']; ?>" required>
+                </div>
+
+                <!-- Status -->
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
                     <select class="form-control" id="status" name="status" required>
-                        <option value="Aktif" <?php echo ($data_aset['status'] == 'Aktif') ? 'selected' : ''; ?>>Aktif
-                        </option>
-                        <option value="Tidak Aktif" <?php echo ($data_aset['status'] == 'Tidak Aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
+                        <option value="Aktif" <?php echo ($data['status'] == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
+                        <option value="Tidak Aktif" <?php echo ($data['status'] == 'Tidak Aktif') ? 'selected' : ''; ?>>
+                            Tidak Aktif</option>
                     </select>
                 </div>
 
@@ -126,62 +130,40 @@ if (isset($_POST['submit'])) {
                 <div class="mb-3">
                     <label for="tanggal_pembelian" class="form-label">Tanggal Pembelian</label>
                     <input type="date" class="form-control" id="tanggal_pembelian" name="tanggal_pembelian"
-                        value="<?php echo htmlspecialchars($data_aset['tanggal_pembelian']); ?>" required>
+                        value="<?php echo $data['tanggal_pembelian']; ?>" required>
                 </div>
 
-                <!-- Karyawan yang bertanggung jawab -->
+
+                <!-- Kondisi -->
                 <div class="mb-3">
-                    <label for="karyawan_id" class="form-label">Karyawan</label>
-                    <select class="form-control" id="karyawan_id" name="karyawan_id" required>
-                        <?php
-                        // Ambil data karyawan dari tabel daftar_karyawan
-                        $query_karyawan = "SELECT id, nama FROM daftar_karyawan";
-                        $result_karyawan = $koneksi->query($query_karyawan);
-                        while ($row = $result_karyawan->fetch_assoc()) {
-                            $selected = ($row['id'] == $data_aset['karyawan_id']) ? 'selected' : '';
-                            echo "<option value='" . htmlspecialchars($row['id']) . "' $selected>" . htmlspecialchars($row['nama']) . "</option>";
-                        }
-                        ?>
-                    </select>
+                    <label for="kondisi" class="form-label">Kondisi</label>
+                    <input type="text" class="form-control" id="kondisi" name="kondisi"
+                        value="<?php echo $data['kondisi']; ?>" required>
                 </div>
 
-                <!-- Kondisi Aset -->
-                <div class="mb-3">
-                    <label for="kondisi" class="form-label">Kondisi Aset</label>
-                    <select class="form-control" id="kondisi" name="kondisi" required>
-                        <option value="Baik" <?php echo ($data_aset['kondisi'] == 'Baik') ? 'selected' : ''; ?>>Baik
-                        </option>
-                        <option value="Rusak" <?php echo ($data_aset['kondisi'] == 'Rusak') ? 'selected' : ''; ?>>Rusak
-                        </option>
-                        <option value="Perlu Perawatan" <?php echo ($data_aset['kondisi'] == 'Perlu Perawatan') ? 'selected' : ''; ?>>Perlu Perawatan</option>
-                    </select>
-                </div>
-
-                <button type="submit" name="submit" class="btn btn-primary custom-btn">
-                    <i class="fas fa-save me-2"></i> Simpan Perubahan
-                </button>
+                <!-- Tombol Submit -->
+                <button type="submit" name="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="?page=aset" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>
 </div>
 
-<!-- CSS for Custom Button Styling -->
+<!-- CSS Custom untuk tombol dan layout -->
 <style>
-    .custom-btn {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        color: white;
+    .form-control {
+        border-radius: 0.375rem;
+        border: 1px solid #ced4da;
+        box-shadow: none;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
         border: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .custom-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .custom-btn:focus {
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
     }
 </style>

@@ -106,12 +106,25 @@ $tanggal_masuk = date("Y-m-d");
 											($barang == $data['kode_barang'] ? "selected" : "") . ">$data[kode_barang] | $data[nama_barang]</option>";
 									}
 									?>
-
 								</select>
-
-
 							</div>
 						</div>
+
+						<!-- Inisialisasi Select2 -->
+						<script>
+							$(document).ready(function () {
+								// Mengaktifkan Select2 pada elemen dengan id cmb_barang
+								$('#cmb_barang').select2({
+									placeholder: "-- Pilih Barang --",
+									allowClear: true,
+									width: '100%',           // Menyesuaikan lebar dropdown
+									minimumInputLength: 2,   // Set minimum karakter untuk mulai pencarian
+									maximumSelectionLength: 5 // Batasi jumlah pilihan yang dapat dipilih
+								});
+
+							});
+						</script>
+
 
 						<div class="tampung"></div>
 						<label for="kondisi">Kondisi</label>
@@ -180,6 +193,15 @@ $tanggal_masuk = date("Y-m-d");
 				</div>
 			</div>
 		</div>
+
+		<head>
+			<!-- Link CSS Select2 -->
+			<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+			<!-- Link JS Select2 -->
+			<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+		</head>
 	</div>
 
 	<?php
